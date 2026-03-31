@@ -197,17 +197,30 @@ app.post('/api/request-otp', async (req, res) => {
 
     try {
         if (!isPhone) {
-            if (!transporter) {
-                console.log(`[DEV MODE] OTP for ${contact} is: ${otp}`);
-                return res.status(200).json({ message: `Dev Mode: SMTP not configured. Your OTP is ${otp}.`, otp });
-            }
-            await transporter.sendMail({
-                from: 'samyoj20266@gmail.com',
-                to: contact,
-                subject: 'Your samyoj Verification Code',
-                text: `Your OTP for samyoj is: ${otp}. It will expire soon. Do not share it with anyone.`
+            const emailjsPayload = {
+                service_id: process.env.EMAILJS_SERVICE_ID || 'service_zr89ur7',
+                template_id: process.env.EMAILJS_TEMPLATE_ID || 'template_n8wuhcb',
+                user_id: process.env.EMAILJS_PUBLIC_KEY || 'OgS0_kxEX5YjdwsAc',
+                accessToken: process.env.EMAILJS_PRIVATE_KEY || 'shV4jUPFD16wmr9aNmmmo',
+                template_params: {
+                    to_email: contact,
+                    otp: otp,
+                    expiry_time: new Date(Date.now() + 15 * 60000).toLocaleString()
+                }
+            };
+
+            const emailRes = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(emailjsPayload)
             });
-            console.log(`[SUCCESS] OTP email sent to ${contact}`);
+
+            if (!emailRes.ok) {
+                const errorText = await emailRes.text();
+                throw new Error(`EmailJS API Error: ${emailRes.status} - ${errorText}`);
+            }
+
+            console.log(`[SUCCESS] OTP email sent via EmailJS to ${contact}`);
             return res.status(200).json({ message: 'OTP sent to your email successfully.', otp });
         } else {
             // SMS OTP Handling
