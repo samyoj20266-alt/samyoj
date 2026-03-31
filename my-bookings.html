@@ -153,8 +153,7 @@
                 if (profile.mobile) altContacts.push(profile.mobile);
                 const res = await fetch('/api/get-my-bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contact, altContacts }) });
                 const data = await res.json();
-                if (data.bookings) data.bookings = data.bookings.filter(b => b.status !== 'Rejected');
-
+                
                 if (data.bookings && data.bookings.length > 0) {
                     container.innerHTML = '';
                     data.bookings.reverse().forEach(b => {
