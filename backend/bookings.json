@@ -1,0 +1,746 @@
+[
+  {
+    "id": "EVT1773401314657",
+    "contact": "sathviksaim2005@gmail.com",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "Spice Symphony Catering",
+        "price": 150000
+      },
+      {
+        "name": "Elegance Events Decor",
+        "price": 75000
+      }
+    ],
+    "totalCost": 225000,
+    "bookingDate": "2026-03-13",
+    "status": "Confirmed",
+    "vendorContact": "9533355912",
+    "vendorName": "Sathvik Events",
+    "customerName": "Guest User",
+    "customerMobile": "sathviksaim2005@gmail.com"
+  },
+  {
+    "id": "EVT1773401400151",
+    "contact": "sathviksaim2005@gmail.com",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "Spice Symphony Catering",
+        "price": 150000
+      },
+      {
+        "name": "Swad Pure Veg Catering",
+        "price": 85000
+      }
+    ],
+    "totalCost": 235000,
+    "bookingDate": "2026-03-13",
+    "status": "Confirmed",
+    "vendorContact": "9533355912",
+    "vendorName": "Sathvik Events",
+    "customerName": "Guest User",
+    "customerMobile": "sathviksaim2005@gmail.com"
+  },
+  {
+    "id": "EVT1773401708457",
+    "contact": "sathviksaim2005@gmail.com",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "Spice Symphony Catering",
+        "price": 150000
+      },
+      {
+        "name": "Swad Pure Veg Catering",
+        "price": 85000
+      }
+    ],
+    "totalCost": 235000,
+    "bookingDate": "2026-03-13",
+    "status": "Confirmed",
+    "vendorContact": "9533355912",
+    "vendorName": "Sathvik Events",
+    "customerName": "Guest User",
+    "customerMobile": "sathviksaim2005@gmail.com"
+  },
+  {
+    "id": "EVT1773420418723",
+    "contact": "sathviksaim2005@gmail.com",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "Spice Symphony Catering",
+        "price": 150000
+      },
+      {
+        "name": "Swad Pure Veg Catering",
+        "price": 85000
+      }
+    ],
+    "totalCost": 235000,
+    "bookingDate": "2026-03-13",
+    "status": "Confirmed",
+    "vendorContact": "9533355912",
+    "vendorName": "Sathvik Events",
+    "customerName": "Guest User",
+    "customerMobile": "sathviksaim2005@gmail.com"
+  },
+  {
+    "id": "EVT1773420585038",
+    "contact": "sathviksaim2005@gmail.com",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "food",
+        "price": 400
+      },
+      {
+        "name": "Premium Veg Catering",
+        "price": 600
+      }
+    ],
+    "totalCost": 1000,
+    "bookingDate": "2026-03-13",
+    "status": "Confirmed",
+    "vendorContact": "9533355912",
+    "vendorName": "Sathvik Events",
+    "customerName": "Guest User",
+    "customerMobile": "sathviksaim2005@gmail.com"
+  },
+  {
+    "id": "EVT1773420890110",
+    "contact": "sathviksaim2005@gmail.com",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "food",
+        "price": 400
+      }
+    ],
+    "totalCost": 400,
+    "bookingDate": "2026-03-13",
+    "status": "Confirmed",
+    "vendorContact": "munagaletisai38@gmail.com",
+    "vendorName": "GlowTech AV Systems",
+    "customerName": "Guest User",
+    "customerMobile": "sathviksaim2005@gmail.com"
+  },
+  {
+    "id": "EVT1773420925523",
+    "contact": "xyzabc00775@gmail.com",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "food",
+        "price": 400
+      }
+    ],
+    "totalCost": 400,
+    "bookingDate": "2026-03-13",
+    "status": "Confirmed",
+    "vendorContact": "9533355912",
+    "vendorName": "Sathvik Events",
+    "customerName": "Guest User",
+    "customerMobile": "xyzabc00775@gmail.com"
+  },
+  {
+    "id": "EVT1773421002157",
+    "contact": "sathviksaim2005@gmail.com",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "food",
+        "price": 400
+      }
+    ],
+    "totalCost": 400,
+    "bookingDate": "2026-03-13",
+    "status": "Confirmed",
+    "vendorContact": "xyzabc00775@gmail.com",
+    "vendorName": "Elegance Events & Decor",
+    "customerName": "Guest User",
+    "customerMobile": "sathviksaim2005@gmail.com"
+  },
+  {
+    "id": "EVT1773421089660",
+    "contact": "sathviksaim2005@gmail.com",
+    "customerName": "Unknown",
+    "customerMobile": "Not provided",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "food",
+        "price": 400
+      }
+    ],
+    "totalCost": 400,
+    "bookingDate": "2026-03-13",
+    "status": "Approved",
+    "vendorContact": "munagaletisai38@gmail.com",
+    "vendorName": "GlowTech AV Systems"
+  },
+  {
+    "id": "EVT1773422435740",
+    "contact": "sathviksaim2005@gmail.com",
+    "customerName": "Unknown",
+    "customerMobile": "Not provided",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "food",
+        "price": 400
+      }
+    ],
+    "totalCost": 400,
+    "bookingDate": "2026-03-13",
+    "status": "Rejected",
+    "vendorContact": "9533355912",
+    "vendorName": "Sathvik Events"
+  },
+  {
+    "id": "EVT1773424847713",
+    "contact": "sathviksaim2005@gmail.com",
+    "customerName": "Unknown",
+    "customerMobile": "Not provided",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "flower decor",
+        "price": 97
+      }
+    ],
+    "totalCost": 97,
+    "bookingDate": "2026-03-13",
+    "status": "Approved",
+    "vendorContact": "xyzabc00775@gmail.com",
+    "vendorName": "Elegance Events & Decor"
+  },
+  {
+    "id": "EVT1773466471282",
+    "contact": "sathviksaim2005@gmail.com",
+    "customerName": "Unknown",
+    "customerMobile": "Not provided",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "food",
+        "price": 400
+      },
+      {
+        "name": "Premium Veg Catering",
+        "price": 600
+      }
+    ],
+    "totalCost": 1000,
+    "bookingDate": "2026-03-14",
+    "status": "Approved",
+    "vendorContact": "9533355912",
+    "vendorName": "Sathvik Events"
+  },
+  {
+    "id": "EVT1773467063313",
+    "contact": "sathviksaim2005@gmail.com",
+    "customerName": "Unknown",
+    "customerMobile": "Not provided",
+    "eventType": "festival",
+    "services": [
+      {
+        "name": "food",
+        "price": 400
+      },
+      {
+        "name": "High Tea & Snacks",
+        "price": 250
+      },
+      {
+        "name": "Spice Symphony Catering",
+        "price": 150000
+      },
+      {
+        "name": "Swad Pure Veg Catering",
+        "price": 85000
+      },
+      {
+        "name": "Elegance Events Decor",
+        "price": 75000
+      },
+      {
+        "name": "GlowTech AV Systems",
+        "price": 40000
+      }
+    ],
+    "totalCost": 350650,
+    "bookingDate": "2026-03-14",
+    "status": "Approved",
+    "vendorContact": "9533355912",
+    "vendorName": "Sathvik Events"
+  },
+  {
+    "id": "EVT1773467457614",
+    "contact": "xyzabc00775@gmail.com",
+    "customerName": "Unknown",
+    "customerMobile": "Not provided",
+    "eventType": "birthday",
+    "services": [
+      {
+        "name": "Sparkle Clean Service",
+        "price": 12000
+      }
+    ],
+    "totalCost": 12000,
+    "bookingDate": "2026-03-14",
+    "status": "Approved",
+    "vendorContact": "xyzabc00775@gmail.com",
+    "vendorName": "Elegance Events & Decor"
+  },
+  {
+    "id": "EVT1773467526131",
+    "contact": "xyzabc00775@gmail.com",
+    "customerName": "sai sathvik",
+    "customerMobile": "9555353533",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "food",
+        "price": 400
+      }
+    ],
+    "totalCost": 400,
+    "bookingDate": "2026-03-14",
+    "status": "Rejected",
+    "vendorContact": "munagaletisai38@gmail.com",
+    "vendorName": "GlowTech AV Systems"
+  },
+  {
+    "id": "EVT1773468452220",
+    "contact": "xyzabc00775@gmail.com",
+    "customerName": "sai sathvik",
+    "customerMobile": "9555353533",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "food",
+        "price": 400
+      }
+    ],
+    "totalCost": 400,
+    "bookingDate": "2026-03-14",
+    "status": "Rejected",
+    "vendorContact": "9533355912",
+    "vendorName": "Sathvik Events"
+  },
+  {
+    "id": "EVT1773469644862",
+    "contact": "xyzabc00775@gmail.com",
+    "customerName": "sai sathvik",
+    "customerMobile": "9555353533",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "food",
+        "price": 400
+      }
+    ],
+    "totalCost": 400,
+    "bookingDate": "2026-03-14",
+    "status": "Approved",
+    "vendorContact": "xyzabc00775@gmail.com",
+    "vendorName": "Elegance Events & Decor"
+  },
+  {
+    "id": "EVT1773469945188",
+    "contact": "sathviksaim2005@gmail.com",
+    "customerName": "sai sathvik",
+    "customerMobile": "9555353533",
+    "eventType": "housewarming",
+    "services": [
+      {
+        "name": "food",
+        "price": 400
+      },
+      {
+        "name": "Elegance Events Decor",
+        "price": 75000
+      },
+      {
+        "name": "GlowTech AV Systems",
+        "price": 40000
+      }
+    ],
+    "totalCost": 115400,
+    "bookingDate": "2026-03-14",
+    "status": "Rejected",
+    "vendorContact": "munagaletisai38@gmail.com",
+    "vendorName": "GlowTech AV Systems"
+  },
+  {
+    "id": "EVT1773472704963",
+    "contact": "sathviksaim2005@gmail.com",
+    "customerName": "sai sathvik",
+    "customerMobile": "9555353533",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "food",
+        "price": 400
+      },
+      {
+        "name": "High Tea & Snacks",
+        "price": 250
+      },
+      {
+        "name": "Elegance Events Decor",
+        "price": 75000
+      },
+      {
+        "name": "ProServe Support Staff",
+        "price": 20000
+      }
+    ],
+    "totalCost": 95650,
+    "bookingDate": "2026-03-14",
+    "status": "Approved",
+    "vendorContact": "9533355912",
+    "vendorName": "Sathvik Events"
+  },
+  {
+    "id": "EVT1773743060015",
+    "contact": "sathviksaim2005@gmail.com",
+    "customerName": "Unknown",
+    "customerMobile": "Not provided",
+    "eventType": "community",
+    "services": [
+      {
+        "name": "Premium Veg Catering",
+        "price": 600
+      },
+      {
+        "name": "High Tea & Snacks",
+        "price": 250
+      },
+      {
+        "name": "Spice Symphony Catering",
+        "price": 150000
+      }
+    ],
+    "totalCost": 150850,
+    "bookingDate": "2026-03-17",
+    "status": "Pending",
+    "vendorContact": "9533355912",
+    "vendorName": "Sathvik Events"
+  },
+  {
+    "id": "EVT1773748701223",
+    "contact": "sathviksaim2005@gmail.com",
+    "vendorContact": "xyzabc00775@gmail.com",
+    "vendorName": "Elegance Events & Decor",
+    "customerName": "Sathvik Sai Updated",
+    "customerMobile": "Not provided",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "Premium Mandap Setup",
+        "price": 75000
+      },
+      {
+        "name": "LED Lighting Package",
+        "price": 20000
+      }
+    ],
+    "totalCost": 95000,
+    "bookingDate": "2026-03-17",
+    "status": "Approved"
+  },
+  {
+    "id": "EVT1773748701242",
+    "contact": "sathviksaim2005@gmail.com",
+    "vendorContact": "",
+    "vendorName": "",
+    "customerName": "Unknown",
+    "customerMobile": "Not provided",
+    "eventType": "Custom Event",
+    "services": [
+      {
+        "name": "Premium Mandap Setup",
+        "price": 75000
+      },
+      {
+        "name": "LED Lighting Package",
+        "price": 20000
+      }
+    ],
+    "totalCost": 95000,
+    "bookingDate": "2026-03-17",
+    "status": "Pending"
+  },
+  {
+    "id": "EVT1773748728133",
+    "contact": "sathviksaim2005@gmail.com",
+    "vendorContact": "munagaletisai38@gmail.com",
+    "vendorName": "GlowTech AV Systems",
+    "customerName": "Sathvik Sai Updated",
+    "customerMobile": "Not provided",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "DJ + Sound System (8 hrs)",
+        "price": 40000
+      },
+      {
+        "name": "LED Screen Rental",
+        "price": 15000
+      }
+    ],
+    "totalCost": 55000,
+    "bookingDate": "2026-03-17",
+    "status": "Approved"
+  },
+  {
+    "id": "EVT1773748728143",
+    "contact": "sathviksaim2005@gmail.com",
+    "vendorContact": "",
+    "vendorName": "",
+    "customerName": "Unknown",
+    "customerMobile": "Not provided",
+    "eventType": "Custom Event",
+    "services": [
+      {
+        "name": "DJ + Sound System (8 hrs)",
+        "price": 40000
+      },
+      {
+        "name": "LED Screen Rental",
+        "price": 15000
+      }
+    ],
+    "totalCost": 55000,
+    "bookingDate": "2026-03-17",
+    "status": "Pending"
+  },
+  {
+    "id": "EVT1773748753218",
+    "contact": "sathviksaim2005@gmail.com",
+    "vendorContact": "9533355912",
+    "vendorName": "Sathvik Events",
+    "customerName": "Sathvik Sai Updated",
+    "customerMobile": "Not provided",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "Veg Buffet (100 guests)",
+        "price": 45000
+      }
+    ],
+    "totalCost": 45000,
+    "bookingDate": "2026-03-17",
+    "status": "Pending"
+  },
+  {
+    "id": "EVT1773748753227",
+    "contact": "sathviksaim2005@gmail.com",
+    "vendorContact": "",
+    "vendorName": "",
+    "customerName": "Unknown",
+    "customerMobile": "Not provided",
+    "eventType": "Custom Event",
+    "services": [
+      {
+        "name": "Veg Buffet (100 guests)",
+        "price": 45000
+      }
+    ],
+    "totalCost": 45000,
+    "bookingDate": "2026-03-17",
+    "status": "Pending"
+  },
+  {
+    "id": "EVT1773755221072",
+    "contact": "24h51a05k9@cmrcet.ac.in",
+    "vendorContact": "24h51a05k9@cmrcet.ac.in",
+    "vendorName": "hotal sindhu",
+    "customerName": "hotal sindhu",
+    "customerMobile": "Not provided",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "premium veg catering",
+        "price": 2000
+      }
+    ],
+    "totalCost": 2000,
+    "bookingDate": "2026-03-17",
+    "status": "Approved"
+  },
+  {
+    "id": "EVT1773755221075",
+    "contact": "24h51a05k9@cmrcet.ac.in",
+    "vendorContact": "",
+    "vendorName": "",
+    "customerName": "Unknown",
+    "customerMobile": "Not provided",
+    "eventType": "Custom Event",
+    "services": [
+      {
+        "name": "premium veg catering",
+        "price": 2000
+      }
+    ],
+    "totalCost": 2000,
+    "bookingDate": "2026-03-17",
+    "status": "Pending"
+  },
+  {
+    "id": "EVT1774677732561",
+    "contact": "munagaletisai38@gmail.com",
+    "vendorContact": "munagaletisai38@gmail.com",
+    "vendorName": "GlowTech AV System",
+    "customerName": "GlowTech AV System",
+    "customerMobile": "Not provided",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "DJ + Sound System (8 hrs)",
+        "price": 40000
+      },
+      {
+        "name": "LED Screen Rental",
+        "price": 15000
+      }
+    ],
+    "totalCost": 55000,
+    "bookingDate": "2026-03-28",
+    "status": "Approved"
+  },
+  {
+    "id": "EVT1774677732568",
+    "contact": "munagaletisai38@gmail.com",
+    "vendorContact": "",
+    "vendorName": "",
+    "customerName": "Unknown",
+    "customerMobile": "Not provided",
+    "eventType": "Custom Event",
+    "services": [
+      {
+        "name": "DJ + Sound System (8 hrs)",
+        "price": 40000
+      },
+      {
+        "name": "LED Screen Rental",
+        "price": 15000
+      }
+    ],
+    "totalCost": 55000,
+    "bookingDate": "2026-03-28",
+    "status": "Pending"
+  },
+  {
+    "id": "EVT1774677851037",
+    "contact": "munagaletisai38@gmail.com",
+    "vendorContact": "munagaletisai38@gmail.com",
+    "vendorName": "GlowTech AV System",
+    "customerName": "GlowTech AV System",
+    "customerMobile": "Not provided",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "DJ + Sound System (8 hrs)",
+        "price": 40000
+      }
+    ],
+    "totalCost": 40000,
+    "bookingDate": "2026-03-28",
+    "status": "Approved"
+  },
+  {
+    "id": "EVT1774677851040",
+    "contact": "munagaletisai38@gmail.com",
+    "vendorContact": "",
+    "vendorName": "",
+    "customerName": "Unknown",
+    "customerMobile": "Not provided",
+    "eventType": "Custom Event",
+    "services": [
+      {
+        "name": "DJ + Sound System (8 hrs)",
+        "price": 40000
+      }
+    ],
+    "totalCost": 40000,
+    "bookingDate": "2026-03-28",
+    "status": "Pending"
+  },
+  {
+    "id": "EVT1774678116493",
+    "contact": "munagaletisai38@gmail.com",
+    "vendorContact": "9533355912",
+    "vendorName": "Sathvik Events",
+    "customerName": "GlowTech AV System",
+    "customerMobile": "Not provided",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "Veg Buffet (100 guests)",
+        "price": 45000
+      }
+    ],
+    "totalCost": 45000,
+    "bookingDate": "2026-03-28",
+    "status": "Pending"
+  },
+  {
+    "id": "EVT1774678116499",
+    "contact": "munagaletisai38@gmail.com",
+    "vendorContact": "",
+    "vendorName": "",
+    "customerName": "Unknown",
+    "customerMobile": "Not provided",
+    "eventType": "festival",
+    "services": [
+      {
+        "name": "Veg Buffet (100 guests)",
+        "price": 45000
+      }
+    ],
+    "totalCost": 45000,
+    "bookingDate": "2026-03-28",
+    "status": "Pending"
+  },
+  {
+    "id": "EVT1774680173497",
+    "contact": "munagaletisai38@gmail.com",
+    "vendorContact": "xyzabc00775@gmail.com",
+    "vendorName": "Elegance Events & Decor",
+    "customerName": "GlowTech AV System",
+    "customerMobile": "Not provided",
+    "eventType": "wedding",
+    "services": [
+      {
+        "name": "Basic Floral Decoration",
+        "price": 35000
+      }
+    ],
+    "totalCost": 35000,
+    "bookingDate": "2026-03-28",
+    "status": "Pending"
+  },
+  {
+    "id": "EVT1774680173504",
+    "contact": "munagaletisai38@gmail.com",
+    "vendorContact": "",
+    "vendorName": "",
+    "customerName": "Unknown",
+    "customerMobile": "Not provided",
+    "eventType": "Custom Event",
+    "services": [
+      {
+        "name": "Basic Floral Decoration",
+        "price": 35000
+      }
+    ],
+    "totalCost": 35000,
+    "bookingDate": "2026-03-28",
+    "status": "Pending"
+  }
+]

@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Dashboard | samyoj</title>
+    <meta name="description" content="Manage your event business — bookings, services, staff, and analytics on samyoj's premium vendor dashboard.">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ── DASHBOARD LAYOUT ── */
+        .dash-layout { display: flex; min-height: calc(100vh - 52px); }
+
+        /* ── SIDEBAR ── */
+        .sidebar-full {
+            width: 240px;
+            background: var(--bg-sidebar);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border-right: 1px solid var(--border-glass);
+            padding: 1.5rem 1rem;
+            flex-shrink: 0;
+            position: sticky;
+            top: 52px;
+            height: calc(100vh - 52px);
+            overflow-y: auto;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.625rem 0.875rem;
+            border-radius: var(--radius-md);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.12s;
+            margin-bottom: 0.125rem;
+        }
+        .menu-item:hover { color: var(--text-primary); background: var(--border-light); }
+        .menu-item.active { color: var(--primary); background: var(--primary-light); font-weight: 600; }
+        .menu-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+        /* ── MAIN AREA ── */
+        .main-content-area {
+            flex: 1;
+            padding: 2rem 2.5rem;
+        }
+
+        /* ── STAT GRID ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+        @media (max-width: 1024px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 500px) { .stat-grid { grid-template-columns: 1fr; } }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 1.25rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--gradient-glow);
+            pointer-events: none;
+        }
+        .stat-card:hover { transform: scale(1.02); box-shadow: var(--shadow-glow); }
+
+        .stat-icon {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            width: 32px; height: 32px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+        .stat-label {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+        }
+
+        /* ── TABLES ── */
+        .data-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            position: relative;
+        }
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--gradient-glow);
+            pointer-events: none;
+        }
+        .data-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .data-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.015em;
+        }
+        .data-body { position: relative; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            text-align: left;
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            font-size: 0.8125rem;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            vertical-align: middle;
+        }
+        tr:last-child td { border-bottom: none; }
+
+        /* ── BENTO BOX (pending bookings) ── */
+        .bento-wrap {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1rem;
+            padding: 1.5rem;
+        }
+        @media (max-width: 768px) { .bento-wrap { grid-template-columns: 1fr; padding: 1rem; } }
+
+        .bento-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--gradient-glow);
+            pointer-events: none;
+            border-radius: inherit;
+        }
+        .bento-card:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-glow);
+            border-color: var(--primary);
+        }
+
+        .bento-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+        @media (max-width: 500px) { .bento-sections { grid-template-columns: 1fr; } }
+
+        .bento-cell {
+            background: var(--bg-elevated);
+            border-radius: var(--radius-lg);
+            padding: 0.875rem;
+            border: 1px solid var(--border-light);
+        }
+
+        /* ── HISTORY CARDS ── */
+        .history-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .history-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--gradient-glow);
+            pointer-events: none;
+        }
+        .history-item:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-md);
+        }
+        .history-item.rejected-row { opacity: 0.55; }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.5rem;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            z-index: 9999;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s ease, fadeOut 0.3s 2.7s forwards;
+        }
+        @keyframes slideUp { from { transform: translateY(1rem); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(1rem); } }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--gradient-glow);
+            pointer-events: none;
+            border-radius: inherit;
+        }
+
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        .empty-state svg { width: 36px; height: 36px; margin: 0 auto 1rem; color: var(--text-faint); }
+    </style>
+</head>
+<body>
+
+    <!-- ═══ GLASSMORPHISM NAVBAR ═══ -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">samyoj</div>
+            <div class="nav-links">
+                <span style="font-size: 0.8125rem; font-weight: 500; color: var(--text-secondary);" id="nav-user-name">Vendor</span>
+                <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">
+                    <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+                <a href="index.html" class="btn btn-outline" style="padding: 0.375rem 0.875rem; font-size: 0.8125rem;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dash-layout">
+
+        <!-- ═══ SIDEBAR (desktop/tablet) ═══ -->
+        <aside class="sidebar-full" id="sidebar">
+            <div class="menu-item active" data-section="dashboard" onclick="showSection('dashboard')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                <span class="menu-label">Dashboard</span>
+            </div>
+            <div class="menu-item" data-section="bookings" onclick="showSection('bookings')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span class="menu-label">My Bookings</span>
+            </div>
+            <div class="menu-item" data-section="services" onclick="showSection('services')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span class="menu-label">Services & Pricing</span>
+            </div>
+            <div class="menu-item" data-section="staff" onclick="showSection('staff')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span class="menu-label">Manage Staff</span>
+            </div>
+            <div class="menu-item" data-section="pending" onclick="showSection('pending')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span class="menu-label">Pending Bookings</span>
+            </div>
+            <div class="menu-item" data-section="history" onclick="showSection('history')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                <span class="menu-label">History</span>
+            </div>
+            <div class="menu-item" data-section="profile" onclick="showSection('profile')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span class="menu-label">Profile</span>
+            </div>
+        </aside>
+
+        <!-- ═══ MAIN CONTENT ═══ -->
+        <main class="main-content-area">
+
+            <!-- ── DASHBOARD ── -->
+            <section id="section-dashboard" class="section-animate">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h1 style="font-size: 1.625rem; font-weight: 800; letter-spacing: -0.025em;">Welcome back, <span id="vendor-name">Vendor</span>!</h1>
+                        <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 0.25rem;">Here's a summary of your business today.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="showSection('services')">+ Add New Service</button>
+                </div>
+
+                <div class="stat-grid" style="margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(34,211,238,0.1); color: var(--cyan);">$</div>
+                        <div class="stat-label">Total Revenue</div>
+                        <div class="stat-value" id="total-revenue">₹0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">📅</div>
+                        <div class="stat-label">Active Bookings</div>
+                        <div class="stat-value" id="active-bookings">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--badge-pending-bg); color: var(--badge-pending-text);">🔔</div>
+                        <div class="stat-label">New Requests</div>
+                        <div class="stat-value" id="pending-count">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--badge-danger-bg); color: var(--badge-danger-text);">♥</div>
+                        <div class="stat-label">Avg. Rating</div>
+                        <div class="stat-value">4.8 ★</div>
+                    </div>
+                </div>
+
+                <!-- Recent Requests -->
+                <div class="data-card">
+                    <div class="data-header">
+                        <h3>Recent Requests</h3>
+                        <a href="#" onclick="showSection('pending'); return false;" style="font-size: 0.8125rem; font-weight: 600; color: var(--primary);">View all →</a>
+                    </div>
+                    <div class="data-body">
+                        <!-- Desktop table -->
+                        <div class="desktop-table">
+                            <table>
+                                <thead><tr><th>Customer</th><th>Event Type</th><th>Date</th><th>Service</th><th>Value</th><th>Status</th></tr></thead>
+                                <tbody id="recent-requests-table"><tr><td colspan="6" class="empty-state">No pending requests at the moment.</td></tr></tbody>
+                            </table>
+                        </div>
+                        <!-- Mobile feature cards -->
+                        <div class="mobile-feature-cards" id="recent-requests-cards" style="padding: 1rem;">
+                            <div class="empty-state">No pending requests at the moment.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── MY BOOKINGS ── -->
+            <section id="section-bookings" class="section-animate" style="display:none;">
+                <h1 style="font-size: 1.5rem; font-weight: 800; letter-spacing: -0.025em; margin-bottom: 0.25rem;">My Bookings</h1>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Manage your upcoming events and appointments.</p>
+
+                <div class="data-card">
+                    <div class="data-header">
+                        <h3>My Bookings</h3>
+                        <span style="font-size: 0.8125rem; color: var(--text-muted);">Manage your upcoming events and appointments.</span>
+                    </div>
+                    <div class="data-body">
+                        <div class="desktop-table">
+                            <table>
+                                <thead><tr><th>ID</th><th>Customer</th><th>Date</th><th>Event</th><th>Service</th><th>Amount</th><th>Status</th><th></th></tr></thead>
+                                <tbody id="bookings-table"><tr><td colspan="8" class="empty-state">Loading...</td></tr></tbody>
+                            </table>
+                        </div>
+                        <div class="mobile-feature-cards" id="bookings-cards" style="padding: 1rem;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── SERVICES ── -->
+            <section id="section-services" class="section-animate" style="display:none;">
+                <h1 style="font-size: 1.5rem; font-weight: 800; letter-spacing: -0.025em; margin-bottom: 0.25rem;">Services & Pricing</h1>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Manage your service offerings.</p>
+
+                <div class="data-card" style="padding: 1.5rem;">
+                    <h3 style="font-weight: 700; margin-bottom: 1.25rem;">Add a New Service</h3>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 0.75rem; align-items: end;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">Service Name</label>
+                            <input type="text" id="service-name" class="form-control" placeholder="E.g. Premium Veg Catering">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">Price (₹)</label>
+                            <input type="number" id="service-price" class="form-control" placeholder="E.g. 50000">
+                        </div>
+                        <button class="btn btn-primary" onclick="addService()">Add</button>
+                    </div>
+                </div>
+
+                <div id="services-list" style="margin-top: 1.25rem; display: grid; gap: 0.75rem;"></div>
+            </section>
+
+            <!-- ── STAFF ── -->
+            <section id="section-staff" class="section-animate" style="display:none;">
+                <h1 style="font-size: 1.5rem; font-weight: 800; letter-spacing: -0.025em; margin-bottom: 0.25rem;">Manage Staff</h1>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Your team members.</p>
+
+                <div class="data-card" style="padding: 1.5rem;">
+                    <h3 style="font-weight: 700; margin-bottom: 1.25rem;">Add Team Member</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 0.75rem; align-items: end;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">Name</label>
+                            <input type="text" id="staff-name" class="form-control" placeholder="E.g. Rajesh Kumar">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">Role</label>
+                            <input type="text" id="staff-role" class="form-control" placeholder="E.g. Head Chef">
+                        </div>
+                        <button class="btn btn-primary" onclick="addStaff()">Add</button>
+                    </div>
+                </div>
+
+                <div id="staff-list" style="margin-top: 1.25rem; display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));"></div>
+            </section>
+
+            <!-- ── PENDING BOOKINGS ── -->
+            <section id="section-pending" class="section-animate" style="display:none;">
+                <h1 style="font-size: 1.5rem; font-weight: 800; letter-spacing: -0.025em; margin-bottom: 0.25rem;">Pending Bookings</h1>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Review and approve customer bookings.</p>
+                <div id="pending-list" class="bento-wrap" style="padding: 0;">
+                    <!-- Skeleton loaders -->
+                    <div class="bento-card">
+                        <div class="skeleton skeleton-text" style="width: 40%;"></div>
+                        <div class="skeleton skeleton-text" style="width: 70%; margin-top: 0.5rem;"></div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1rem;">
+                            <div class="skeleton" style="height: 70px; border-radius: var(--radius-lg);"></div>
+                            <div class="skeleton" style="height: 70px; border-radius: var(--radius-lg);"></div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                            <div class="skeleton" style="height: 36px; width: 80px; border-radius: var(--radius-md);"></div>
+                            <div class="skeleton" style="height: 36px; width: 80px; border-radius: var(--radius-md);"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── HISTORY ── -->
+            <section id="section-history" class="section-animate" style="display:none;">
+                <h1 style="font-size: 1.5rem; font-weight: 800; letter-spacing: -0.025em; margin-bottom: 0.25rem;">Processed Bookings</h1>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Approved or rejected booking history.</p>
+                <div id="history-list"></div>
+            </section>
+
+            <!-- ── PROFILE ── -->
+            <section id="section-profile" class="section-animate" style="display:none;">
+                <h1 style="font-size: 1.5rem; font-weight: 800; letter-spacing: -0.025em; margin-bottom: 1.5rem;">Vendor Profile</h1>
+                <div class="data-card" style="padding: 2rem; max-width: 560px;">
+                    <div class="form-group">
+                        <label class="form-label">Business Name</label>
+                        <input type="text" id="v-profile-name" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="v-profile-email" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Contact Number</label>
+                        <input type="text" id="v-profile-phone" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" style="display:flex; justify-content:space-between; align-items:flex-end;">
+                            <span>Location (Exact Address)</span>
+                            <button class="btn btn-outline" onclick="getCurrentLocation(event)" style="padding: 0.15rem 0.6rem; font-size: 0.75rem;">Get exact map location 📍</button>
+                        </label>
+                        <input type="text" id="v-profile-location" class="form-control" placeholder="E.g. Andheri West, Mumbai">
+                        <input type="hidden" id="v-profile-lat">
+                        <input type="hidden" id="v-profile-lon">
+                        <small id="location-status" style="color:var(--text-muted); font-size: 0.75rem; margin-top: 0.35rem; display:block;"></small>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveProfile()" style="width: 100%;">Save Profile</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ═══ BOTTOM NAVIGATION (mobile) ═══ -->
+    <nav class="bottom-nav" id="bottom-nav">
+        <div class="bottom-nav-inner">
+            <a class="bottom-nav-item active" data-section="dashboard" onclick="showSection('dashboard')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Home
+            </a>
+            <a class="bottom-nav-item" data-section="bookings" onclick="showSection('bookings')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Bookings
+            </a>
+            <a class="bottom-nav-item" data-section="pending" onclick="showSection('pending')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Pending
+            </a>
+            <a class="bottom-nav-item" data-section="services" onclick="showSection('services')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Services
+            </a>
+            <a class="bottom-nav-item" data-section="profile" onclick="showSection('profile')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Profile
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        const API = '/api';
+        const vendorContact = localStorage.getItem('userContact') || '';
+
+        /* ── THEME TOGGLE ── */
+        (function() {
+            const toggle = document.getElementById('theme-toggle');
+            const sunIcon = document.getElementById('theme-icon-sun');
+            const moonIcon = document.getElementById('theme-icon-moon');
+            const stored = localStorage.getItem('samyoj-theme');
+
+            function applyTheme(dark) {
+                document.documentElement.classList.toggle('dark', dark);
+                sunIcon.style.display = dark ? 'none' : 'block';
+                moonIcon.style.display = dark ? 'block' : 'none';
+            }
+
+            if (stored === 'dark') applyTheme(true);
+            else if (stored === 'light') applyTheme(false);
+            else applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+            toggle.addEventListener('click', () => {
+                const isDark = document.documentElement.classList.toggle('dark');
+                localStorage.setItem('samyoj-theme', isDark ? 'dark' : 'light');
+                sunIcon.style.display = isDark ? 'none' : 'block';
+                moonIcon.style.display = isDark ? 'block' : 'none';
+            });
+        })();
+
+        /* ── NAVIGATION ── */
+        function showSection(id) {
+            document.querySelectorAll('[id^="section-"]').forEach(s => s.style.display = 'none');
+            const el = document.getElementById('section-' + id);
+            if (el) { el.style.display = 'block'; el.classList.add('section-animate'); }
+
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            document.querySelectorAll('.bottom-nav-item').forEach(m => m.classList.remove('active'));
+            document.querySelectorAll(`[data-section="${id}"]`).forEach(m => m.classList.add('active'));
+
+            if (id === 'bookings' || id === 'dashboard') loadBookings();
+            if (id === 'pending') loadPending();
+            if (id === 'history') loadHistory();
+            if (id === 'services') renderServices();
+            if (id === 'staff') renderStaff();
+            if (id === 'profile') loadProfile();
+        }
+
+        /* ── RENDER CUSTOMER NAME ── */
+        function renderName(booking) {
+            const name = booking.customerName && booking.customerName !== 'Unknown' ? booking.customerName : null;
+            const email = booking.customerEmail || booking.contact || '';
+            if (name) return `<div style="font-weight:600; font-size:0.8125rem;">${name}</div><div style="font-size:0.6875rem; color:var(--text-muted);">${email}</div>`;
+            return `<div style="display:flex;align-items:center;gap:0.5rem;">
+                <div class="guest-avatar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                <div><div style="font-weight:600;font-size:0.8125rem;">Guest User</div><div style="font-size:0.6875rem;color:var(--text-muted);">${email}</div></div></div>`;
+        }
+
+        function badgeFor(status) {
+            const cls = status === 'Approved' ? 'badge-approved' : status === 'Pending' ? 'badge-pending' : 'badge-rejected';
+            return `<span class="badge ${cls}">${status}</span>`;
+        }
+
+        function showToast(msg) {
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.textContent = msg;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        }
+
+        /* ── LOAD BOOKINGS (scoped to this vendor) ── */
+        async function loadBookings() {
+            try {
+                const res = await fetch(API + '/get-bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contact: vendorContact })
+                });
+                const data = await res.json();
+                let bookings = data.bookings || [];
+                bookings = bookings.filter(b => ['Approved', 'Confirmed'].includes(b.status));
+
+                const tbody = document.getElementById('bookings-table');
+                const cardsDiv = document.getElementById('bookings-cards');
+
+                document.getElementById('total-revenue').textContent = '₹' + bookings.reduce((s,b) => s + (b.totalCost || 0), 0).toLocaleString('en-IN');
+                document.getElementById('active-bookings').textContent = bookings.length;
+
+                if (!bookings.length) {
+                    tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No confirmed bookings yet.</td></tr>';
+                    cardsDiv.innerHTML = '<div class="empty-state">No confirmed bookings yet.</div>';
+                    return;
+                }
+
+                tbody.innerHTML = bookings.map(b => `
+                    <tr class="group-row">
+                        <td style="font-family: monospace; font-size: 0.75rem; color: var(--text-muted);">#${b.id?.toString().slice(-6) || '---'}</td>
+                        <td>${renderName(b)}</td>
+                        <td>${b.bookingDate || '—'}</td>
+                        <td style="text-transform: capitalize;">${b.eventType || '—'}</td>
+                        <td style="font-size: 0.75rem;">${b.services?.map(s => s.name).join(', ') || '—'}</td>
+                        <td style="font-weight: 700;">₹${(b.totalCost || 0).toLocaleString('en-IN')}</td>
+                        <td>${badgeFor(b.status)}</td>
+                        <td><button class="btn-more group-action">⋯</button></td>
+                    </tr>
+                `).join('');
+
+                cardsDiv.innerHTML = bookings.map(b => `
+                    <div class="feature-card">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+                            ${renderName(b)}
+                            ${badgeFor(b.status)}
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
+                            <div><div class="micro-label">Event</div><div style="font-size:0.8125rem;text-transform:capitalize;">${b.eventType || '—'}</div></div>
+                            <div><div class="micro-label">Date</div><div style="font-size:0.8125rem;">${b.bookingDate || '—'}</div></div>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:0.75rem;border-top:1px solid var(--border-light);">
+                            <div class="micro-label" style="margin-bottom:0;">Total</div>
+                            <div style="font-weight:800;color:var(--primary);">₹${(b.totalCost||0).toLocaleString('en-IN')}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch(e) { console.error('loadBookings error', e); }
+        }
+
+        /* ── LOAD PENDING (scoped) ── */
+        async function loadPending() {
+            try {
+                const res = await fetch(API + '/get-bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contact: vendorContact })
+                });
+                const data = await res.json();
+                const pending = (data.bookings || []).filter(b => b.status === 'Pending');
+                const wrap = document.getElementById('pending-list');
+
+                document.getElementById('pending-count').textContent = pending.length;
+
+                if (!pending.length) {
+                    wrap.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg><br>No pending bookings — you\'re all caught up!</div>';
+                    return;
+                }
+
+                wrap.innerHTML = pending.map(b => {
+                    const servicesHtml = (b.services || []).map(s =>
+                        `<div style="display:flex;justify-content:space-between;font-size:0.8125rem;padding:0.25rem 0;border-bottom:1px solid var(--border-light);"><span>${s.name}</span><span style="color:var(--text-muted);font-weight:500;">₹${s.price?.toLocaleString('en-IN')}</span></div>`
+                    ).join('');
+                    return `
+                        <div class="bento-card section-animate">
+                            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+                                <div>
+                                    <div class="micro-label">Order ID</div>
+                                    <span style="font-size:0.6875rem;color:var(--text-muted);font-family:monospace;">${b.id}</span>
+                                </div>
+                                ${badgeFor('Pending')}
+                            </div>
+                            <h3 style="font-size:1rem;font-weight:700;letter-spacing:-0.015em;margin-bottom:1rem;text-transform:capitalize;">${b.eventType} Event</h3>
+                            <div class="bento-sections">
+                                <div class="bento-cell"><div class="micro-label">Customer</div>${renderName(b)}</div>
+                                <div class="bento-cell"><div class="micro-label">Services</div>${servicesHtml}</div>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border-light);">
+                                <div><div class="micro-label" style="margin-bottom:0.125rem;">Total Amount</div><span style="font-size:1.125rem;font-weight:800;color:var(--primary);">₹${(b.totalCost||0).toLocaleString('en-IN')}</span></div>
+                                <div style="display:flex;gap:0.5rem;">
+                                    <button class="btn btn-primary" onclick="updateStatus('${b.id}','Approved')">Approve</button>
+                                    <button class="btn btn-ghost" onclick="updateStatus('${b.id}','Rejected')">Reject</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch(e) { console.error('loadPending error', e); }
+        }
+
+        /* ── LOAD HISTORY (scoped) ── */
+        async function loadHistory() {
+            try {
+                const res = await fetch(API + '/get-bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contact: vendorContact })
+                });
+                const data = await res.json();
+                const items = (data.bookings || []).filter(b => ['Approved','Rejected','Confirmed'].includes(b.status));
+                const wrap = document.getElementById('history-list');
+
+                if (!items.length) {
+                    wrap.innerHTML = '<div class="empty-state">No processed bookings yet.</div>';
+                    return;
+                }
+
+                wrap.innerHTML = items.map(b => `
+                    <div class="history-item ${b.status === 'Rejected' ? 'rejected-row' : ''}">
+                        <div style="display:flex;align-items:center;gap:1rem;">
+                            ${renderName(b)}
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-size:0.8125rem;color:var(--text-secondary);text-transform:capitalize;">${b.eventType} Event</div>
+                            <div style="font-size:0.6875rem;color:var(--text-muted);">${b.bookingDate || '—'}</div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:1rem;">
+                            <span style="font-weight:800;font-size:1rem;">₹${(b.totalCost||0).toLocaleString('en-IN')}</span>
+                            ${badgeFor(b.status)}
+                        </div>
+                    </div>
+                `).join('');
+            } catch(e) { console.error('loadHistory error', e); }
+        }
+
+        /* ── UPDATE BOOKING STATUS ── */
+        async function updateStatus(id, status) {
+            try {
+                const res = await fetch(API + '/update-booking-status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ bookingId: id, status })
+                });
+                if (res.ok) {
+                    showToast(`Booking ${status.toLowerCase()} successfully.`);
+                    loadPending();
+                    loadBookings();
+                    loadRecentRequests();
+                }
+            } catch(e) { showToast('Failed to update status.'); }
+        }
+
+        /* ── SERVICES (server-side, per vendor) ── */
+        let cachedServices = [];
+
+        async function addService() {
+            const name = document.getElementById('service-name').value.trim();
+            const price = document.getElementById('service-price').value.trim();
+            if (!name || !price) return;
+            try {
+                const res = await fetch(API + '/add-vendor-service', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contact: vendorContact, name, price: parseInt(price) })
+                });
+                if (res.ok) {
+                    document.getElementById('service-name').value = '';
+                    document.getElementById('service-price').value = '';
+                    await renderServices();
+                    showToast('Service added successfully.');
+                }
+            } catch(e) { showToast('Failed to add service.'); }
+        }
+
+        async function renderServices() {
+            try {
+                const res = await fetch(API + '/get-vendor-services', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contact: vendorContact })
+                });
+                const data = await res.json();
+                cachedServices = data.services || [];
+                const list = document.getElementById('services-list');
+                if (!cachedServices.length) { list.innerHTML = '<div class="empty-state">No services added yet. Add services so customers can book you.</div>'; return; }
+                list.innerHTML = cachedServices.map((s, i) => `
+                    <div class="staff-card">
+                        <div style="flex:1;"><div style="font-weight:600;font-size:0.8125rem;">${s.name}</div><div style="font-size:0.75rem;color:var(--text-muted);">₹${s.price?.toLocaleString('en-IN')}</div></div>
+                        <button class="btn btn-ghost" onclick="deleteService(${i})" style="font-size:0.6875rem;">Remove</button>
+                    </div>
+                `).join('');
+            } catch(e) { console.error('renderServices error', e); }
+        }
+
+        async function deleteService(i) {
+            try {
+                await fetch(API + '/remove-vendor-service', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contact: vendorContact, index: i })
+                });
+                await renderServices();
+                showToast('Service removed.');
+            } catch(e) { showToast('Failed to remove service.'); }
+        }
+
+        /* ── STAFF (server-side, per vendor) ── */
+        async function addStaff() {
+            const name = document.getElementById('staff-name').value.trim();
+            const role = document.getElementById('staff-role').value.trim();
+            if (!name || !role) return;
+            try {
+                const res = await fetch(API + '/add-vendor-staff', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contact: vendorContact, name, role })
+                });
+                if (res.ok) {
+                    document.getElementById('staff-name').value = '';
+                    document.getElementById('staff-role').value = '';
+                    await renderStaff();
+                    showToast('Staff member added.');
+                }
+            } catch(e) { showToast('Failed to add staff.'); }
+        }
+
+        async function renderStaff() {
+            try {
+                const res = await fetch(API + '/get-vendor-staff', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contact: vendorContact })
+                });
+                const data = await res.json();
+                const staff = data.staff || [];
+                const list = document.getElementById('staff-list');
+                if (!staff.length) { list.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">No team members added yet.</div>'; return; }
+                list.innerHTML = staff.map((s, i) => `
+                    <div class="staff-card">
+                        <div class="staff-avatar">${s.name.charAt(0).toUpperCase()}</div>
+                        <div style="flex:1;"><div style="font-weight:600;font-size:0.8125rem;">${s.name}</div><div style="font-size:0.75rem;color:var(--text-muted);">${s.role}</div></div>
+                        <button class="btn btn-ghost" onclick="deleteStaff(${i})" style="font-size:0.6875rem;">Remove</button>
+                    </div>
+                `).join('');
+            } catch(e) { console.error('renderStaff error', e); }
+        }
+
+        async function deleteStaff(i) {
+            try {
+                await fetch(API + '/remove-vendor-staff', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contact: vendorContact, index: i })
+                });
+                await renderStaff();
+                showToast('Staff member removed.');
+            } catch(e) { showToast('Failed to remove staff.'); }
+        }
+
+        /* ── PROFILE (server-side) ── */
+        async function loadProfile() {
+            try {
+                const res = await fetch(API + '/get-profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ role: 'vendor', contact: vendorContact })
+                });
+                const p = await res.json();
+                document.getElementById('v-profile-name').value = p.businessName || p.name || '';
+                document.getElementById('v-profile-email').value = p.email || '';
+                document.getElementById('v-profile-phone').value = p.phone || '';
+                document.getElementById('v-profile-location').value = p.location || '';
+                document.getElementById('v-profile-lat').value = p.lat || '';
+                document.getElementById('v-profile-lon').value = p.lon || '';
+            } catch(e) { console.error('loadProfile error', e); }
+        }
+
+        async function saveProfile() {
+            const profileData = {
+                role: 'vendor',
+                originalContact: vendorContact,
+                name: document.getElementById('v-profile-name').value,
+                businessName: document.getElementById('v-profile-name').value,
+                email: document.getElementById('v-profile-email').value,
+                phone: document.getElementById('v-profile-phone').value,
+                location: document.getElementById('v-profile-location').value,
+                lat: document.getElementById('v-profile-lat').value || undefined,
+                lon: document.getElementById('v-profile-lon').value || undefined
+            };
+            try {
+                const res = await fetch(API + '/update-profile', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(profileData)
+                });
+                if (res.ok) {
+                    localStorage.setItem('userName', profileData.name);
+                    document.getElementById('vendor-name').textContent = profileData.name;
+                    document.getElementById('nav-user-name').textContent = profileData.name;
+                    showToast('Profile saved.');
+                }
+            } catch(e) { showToast('Failed to save profile.'); }
+        }
+
+        async function getCurrentLocation(e) {
+            e.preventDefault();
+            const statusLabel = document.getElementById('location-status');
+            statusLabel.textContent = 'Fetching precise location from device...';
+            statusLabel.style.color = 'var(--primary)';
+            
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(async function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    
+                    document.getElementById('v-profile-lat').value = lat;
+                    document.getElementById('v-profile-lon').value = lon;
+                    
+                    try {
+                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                        const data = await res.json();
+                        if (data && data.display_name) {
+                            document.getElementById('v-profile-location').value = data.display_name;
+                            statusLabel.textContent = 'Location successfully matched and saved internally!';
+                            statusLabel.style.color = '#10b981'; // Success green
+                        } else {
+                            statusLabel.textContent = 'Address fetched but formatting failed. Map will still use exact pin.';
+                            statusLabel.style.color = '#10b981';
+                        }
+                    } catch(err) {
+                        statusLabel.textContent = 'Coordinates saved successfully for precise map pinning.';
+                        document.getElementById('v-profile-location').value = `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+                        statusLabel.style.color = '#10b981';
+                    }
+                }, function(error) {
+                    statusLabel.textContent = 'Location access denied. Please allow location permissions in your browser.';
+                    statusLabel.style.color = '#ef4444'; // Danger red
+                }, { enableHighAccuracy: true });
+            } else {
+                statusLabel.textContent = 'Geolocation not supported by this browser.';
+                statusLabel.style.color = '#ef4444';
+            }
+        }
+
+        /* ── RECENT REQUESTS FOR DASHBOARD (scoped) ── */
+        async function loadRecentRequests() {
+            try {
+                const res = await fetch(API + '/get-bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contact: vendorContact })
+                });
+                const data = await res.json();
+                const pending = (data.bookings || []).filter(b => b.status === 'Pending').slice(0, 5);
+                const tbody = document.getElementById('recent-requests-table');
+                const cardsDiv = document.getElementById('recent-requests-cards');
+
+                if (!pending.length) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No pending requests at the moment.</td></tr>';
+                    cardsDiv.innerHTML = '<div class="empty-state">No pending requests at the moment.</div>';
+                    return;
+                }
+
+                tbody.innerHTML = pending.map(b => `
+                    <tr class="group-row">
+                        <td>${renderName(b)}</td>
+                        <td style="text-transform:capitalize;">${b.eventType}</td>
+                        <td>${b.bookingDate || '—'}</td>
+                        <td style="font-size:0.75rem;">${b.services?.map(s=>s.name).join(', ') || '—'}</td>
+                        <td style="font-weight:700;">₹${(b.totalCost||0).toLocaleString('en-IN')}</td>
+                        <td>${badgeFor(b.status)}</td>
+                    </tr>
+                `).join('');
+
+                cardsDiv.innerHTML = pending.map(b => `
+                    <div class="feature-card">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+                            ${renderName(b)}
+                            ${badgeFor(b.status)}
+                        </div>
+                        <div style="font-size:0.75rem;color:var(--text-muted);text-transform:capitalize;margin-bottom:0.5rem;">${b.eventType} · ${b.bookingDate||'—'}</div>
+                        <div style="font-weight:700;color:var(--primary);">₹${(b.totalCost||0).toLocaleString('en-IN')}</div>
+                    </div>
+                `).join('');
+            } catch(e) { console.error('loadRecent error', e); }
+        }
+
+        /* ── INIT ── */
+        const userName = localStorage.getItem('userName') || 'Vendor';
+        document.getElementById('vendor-name').textContent = userName;
+        document.getElementById('nav-user-name').textContent = userName;
+
+        if (!vendorContact) {
+            console.warn('No vendorContact found. Redirecting to login.');
+            // Still allow the page to render but with empty data
+        }
+        loadBookings();
+        loadRecentRequests();
+    </script>
+</body>
+</html>

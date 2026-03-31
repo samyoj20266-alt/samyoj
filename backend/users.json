@@ -1,0 +1,241 @@
+{
+  "customers": [
+    {
+      "email": "sathviksaim2005@gmail.com",
+      "phone": "9533355912",
+      "password": "cmr1234",
+      "name": "Sathvik Sai",
+      "location": "",
+      "createdAt": "2026-03-13T00:00:00.000Z"
+    },
+    {
+      "email": "sreeg598@gmail.com",
+      "phone": null,
+      "password": "1234cmr",
+      "name": "Sree G",
+      "location": "",
+      "createdAt": "2026-03-13T00:00:00.000Z"
+    },
+    {
+      "email": "srishashank1979@gmail.com",
+      "phone": null,
+      "password": "1234cmr",
+      "name": "",
+      "businessName": "",
+      "category": "",
+      "location": "",
+      "description": "",
+      "services": [],
+      "staff": [],
+      "rating": "4.4",
+      "reviewCount": 49,
+      "createdAt": "2026-03-17T12:45:43.595Z"
+    },
+    {
+      "email": "saisathwikm2005@gmail.com",
+      "phone": null,
+      "password": "cmrcet1234",
+      "name": "",
+      "businessName": "",
+      "category": "",
+      "location": "",
+      "description": "",
+      "services": [],
+      "staff": [],
+      "rating": "4.1",
+      "reviewCount": 5,
+      "createdAt": "2026-03-28T05:57:14.754Z"
+    }
+  ],
+  "vendors": [
+    {
+      "email": null,
+      "phone": "9533355912",
+      "password": "cmr1234",
+      "name": "Sathvik Events",
+      "businessName": "Sathvik Events",
+      "category": "Catering",
+      "location": "Hyderabad",
+      "description": "Premium multi-cuisine catering for weddings, corporate events, and private parties.",
+      "services": [
+        {
+          "name": "Veg Buffet (100 guests)",
+          "price": 45000,
+          "description": "Complete vegetarian buffet with 8 items, desserts, and welcome drinks."
+        },
+        {
+          "name": "Non-Veg Buffet (100 guests)",
+          "price": 65000,
+          "description": "Premium non-veg buffet with starters, mains, biryani, and desserts."
+        },
+        {
+          "name": "Live Counter Setup",
+          "price": 25000,
+          "description": "Live dosa, pasta, or chaat counter with trained chefs."
+        }
+      ],
+      "staff": [
+        {
+          "name": "Ravi Kumar",
+          "role": "Head Chef"
+        },
+        {
+          "name": "Anjali Reddy",
+          "role": "Service Manager"
+        }
+      ],
+      "rating": "4.8",
+      "reviewCount": 120,
+      "createdAt": "2026-03-13T00:00:00.000Z"
+    },
+    {
+      "email": "xyzabc00775@gmail.com",
+      "phone": "9555353533",
+      "password": "1234cmr",
+      "name": "sai sathvik",
+      "businessName": "Elegance Events & Decor",
+      "category": "Decoration",
+      "location": "Hyderabad",
+      "description": "Full-service event decoration — floral, lighting, mandap, drapery, and stage design.",
+      "services": [
+        {
+          "name": "Basic Floral Decoration",
+          "price": 35000,
+          "description": "Fresh flower arrangements for stage, entrance, and table centerpieces."
+        },
+        {
+          "name": "Premium Mandap Setup",
+          "price": 75000,
+          "description": "Custom mandap with orchids, fairy lights, and designer drapery."
+        },
+        {
+          "name": "LED Lighting Package",
+          "price": 20000,
+          "description": "Ambient LED up-lighting, fairy lights, and spot lighting for the venue."
+        },
+        {
+          "name": "Complete Venue Transformation",
+          "price": 150000,
+          "description": "End-to-end venue design including entrance arch, stage, seating, and photo booth."
+        }
+      ],
+      "staff": [
+        {
+          "name": "Priya Sharma",
+          "role": "Creative Director"
+        },
+        {
+          "name": "Karthik Nair",
+          "role": "Lead Decorator"
+        },
+        {
+          "name": "Meena Devi",
+          "role": "Floral Specialist"
+        }
+      ],
+      "rating": "4.9",
+      "reviewCount": 200,
+      "createdAt": "2026-03-13T00:00:00.000Z"
+    },
+    {
+      "email": "munagaletisai38@gmail.com",
+      "phone": null,
+      "password": "cmr1234",
+      "name": "GlowTech AV System",
+      "businessName": "GlowTech AV System",
+      "category": "Lighting & Sound",
+      "location": "CMR College of Engineering & Technology, Outer Ring Road, Medchal mandal, Medchal–Malkajgiri, Telangana, 501401, India",
+      "description": "Professional DJ, LED screens, moving head lights, and sound systems for events.",
+      "services": [
+        {
+          "name": "DJ + Sound System (8 hrs)",
+          "price": 40000,
+          "description": "Professional DJ with hi-fi sound system, subwoofers, and wireless mics."
+        },
+        {
+          "name": "LED Screen Rental",
+          "price": 15000,
+          "description": "55-inch LED screens with stand for photo/video display."
+        },
+        {
+          "name": "Stage Lighting Package",
+          "price": 25000,
+          "description": "Moving heads, par cans, and ambient up-lighting for venue."
+        },
+        {
+          "name": "Full AV Package",
+          "price": 75000,
+          "description": "Complete audio-visual setup including DJ, screens, lighting, and fog machines."
+        }
+      ],
+      "staff": [
+        {
+          "name": "Venkat Rao",
+          "role": "Sound Engineer"
+        },
+        {
+          "name": "Arjun Patel",
+          "role": "Lighting Technician"
+        }
+      ],
+      "rating": "4.6",
+      "reviewCount": 55,
+      "createdAt": "2026-03-13T00:00:00.000Z",
+      "lat": "17.604712475609897",
+      "lon": "78.48577541914692"
+    },
+    {
+      "email": "testme123456@gmail.com",
+      "phone": null,
+      "password": "pw",
+      "name": "",
+      "businessName": "",
+      "category": "",
+      "location": "",
+      "description": "",
+      "services": [],
+      "staff": [],
+      "rating": "5.0",
+      "reviewCount": 44,
+      "createdAt": "2026-03-17T13:02:39.943Z"
+    },
+    {
+      "email": null,
+      "phone": "+919876543210",
+      "password": "pw",
+      "name": "",
+      "businessName": "",
+      "category": "",
+      "location": "",
+      "description": "",
+      "services": [],
+      "staff": [],
+      "rating": "4.9",
+      "reviewCount": 7,
+      "createdAt": "2026-03-17T13:10:23.270Z"
+    },
+    {
+      "email": "24h51a05k9@cmrcet.ac.in",
+      "phone": null,
+      "password": "cmr1234",
+      "name": "hotal sindhu",
+      "businessName": "hotal sindhu",
+      "category": "",
+      "location": "Sejin Building, 67, Changgyeonggung-ro, Jugyo-dong, Euljiro-dong, Jung-gu, Seoul, 04545, South Korea",
+      "description": "",
+      "services": [
+        {
+          "name": "premium veg catering",
+          "price": 2000,
+          "description": ""
+        }
+      ],
+      "staff": [],
+      "rating": "4.6",
+      "reviewCount": 28,
+      "createdAt": "2026-03-17T13:14:59.556Z",
+      "lat": "37.5682",
+      "lon": "126.9977"
+    }
+  ]
+}

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Vendors | samyoj</title>
+    <meta name="description" content="Browse verified vendors and service providers for your events on samyoj.">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .page-header { margin-bottom: 2rem; }
+        .page-header h1 { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.025em; margin-bottom: 0.375rem; }
+        .page-header p { color: var(--text-muted); font-size: 0.875rem; }
+
+        .search-bar {
+            display: flex; gap: 0.75rem; margin-bottom: 2rem; flex-wrap: wrap;
+        }
+        .search-bar input, .search-bar select {
+            padding: 0.625rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-family: var(--font-main);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .search-bar input { flex: 1; min-width: 200px; }
+        .search-bar select { min-width: 160px; }
+        .search-bar input:focus, .search-bar select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+        }
+
+        .vendor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .vendor-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .vendor-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--gradient-glow);
+            pointer-events: none;
+            border-radius: inherit;
+            z-index: 1;
+        }
+        .vendor-card:hover { transform: scale(1.02); box-shadow: var(--shadow-glow); border-color: var(--primary); }
+
+        .vendor-cover {
+            height: 180px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 900;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: -0.04em;
+        }
+
+        .vendor-body { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; position: relative; z-index: 2; }
+        .vendor-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); font-weight: 700; margin-bottom: 0.5rem; }
+        .vendor-name { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.375rem; letter-spacing: -0.015em; }
+        .vendor-desc { font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 0.75rem; line-height: 1.5; }
+        .vendor-rating-badge {
+            display: inline-flex; align-items: center; gap: 0.25rem;
+            background: var(--badge-pending-bg); color: var(--badge-pending-text);
+            padding: 0.1875rem 0.5rem; border-radius: 9999px;
+            font-size: 0.6875rem; font-weight: 600;
+            margin-bottom: 0.75rem; width: fit-content;
+        }
+        .vendor-services-list {
+            display: flex; flex-wrap: wrap; gap: 0.375rem; margin-bottom: 0.75rem;
+        }
+        .vendor-service-tag {
+            padding: 0.1875rem 0.5rem;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 9999px;
+            font-size: 0.6875rem;
+            font-weight: 600;
+        }
+        .vendor-location {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            display: flex; align-items: center; gap: 0.375rem;
+            margin-bottom: 0.75rem;
+        }
+        .vendor-contact-row { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-light); font-size: 0.8125rem; color: var(--text-muted); }
+        .contact-item { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; }
+
+        .book-btn {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--gradient);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.8125rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font-main);
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+        .book-btn:hover { box-shadow: 0 2px 12px rgba(168, 85, 247, 0.3); transform: translateY(-1px); }
+
+        .empty-state-big {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+        .empty-state-big svg { width: 48px; height: 48px; margin-bottom: 1rem; opacity: 0.4; }
+
+        .vendor-count {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Category cover colors */
+        .cover-catering { background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); }
+        .cover-decoration { background: linear-gradient(135deg, #ec4899 0%, #f97316 100%); }
+        .cover-lighting { background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%); }
+        .cover-photography { background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); }
+        .cover-venue { background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%); }
+        .cover-general { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); }
+        .cover-cleaning { background: linear-gradient(135deg, #14b8a6 0%, #22d3ee 100%); }
+        .cover-staff { background: linear-gradient(135deg, #f97316 0%, #fbbf24 100%); }
+
+        @media (max-width: 768px) {
+            .vendor-grid { grid-template-columns: 1fr; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="customer-dashboard.html" class="logo">samyoj</a>
+            <div class="nav-links">
+                <a href="customer-dashboard.html">Discover</a>
+                <a href="vendor-directory.html" class="active">Find Vendors</a>
+                <a href="find-on-map.html">Map Search</a>
+                <a href="my-bookings.html">My Bookings</a>
+                <a href="profile.html">Profile</a>
+                <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">
+                    <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+                <a href="index.html" class="btn btn-outline" style="padding: 0.4rem 1rem;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container max-w-7xl" style="padding: 2rem 1.5rem;">
+        <div class="page-header">
+            <h1>Verified Vendors</h1>
+            <p>Connect with the best service providers for your events.</p>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search vendors by name, service, or location..." oninput="filterVendors()">
+            <select id="category-filter" onchange="filterVendors()">
+                <option value="">All Categories</option>
+                <option value="catering">Catering</option>
+                <option value="decoration">Decoration</option>
+                <option value="lighting">Lighting & Sound</option>
+                <option value="photography">Photography</option>
+                <option value="venue">Venue</option>
+                <option value="cleaning">Cleaning</option>
+                <option value="staff">Support Staff</option>
+                <option value="general">General</option>
+            </select>
+        </div>
+
+        <div class="vendor-count" id="vendor-count"></div>
+        <div id="vendor-grid" class="vendor-grid">
+            <div class="empty-state-big">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <div>Loading vendors...</div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="padding: 2rem; text-align: center; color: var(--text-faint); font-size: 0.75rem;">
+        © 2026 samyoj. All rights reserved.
+    </footer>
+
+    <!-- ═══ BOTTOM NAV (mobile) ═══ -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-inner">
+            <a class="bottom-nav-item" href="customer-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Discover</a>
+            <a class="bottom-nav-item active" href="vendor-directory.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Vendors</a>
+            <a class="bottom-nav-item" href="my-bookings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Bookings</a>
+            <a class="bottom-nav-item" href="find-on-map.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Map</a>
+            <a class="bottom-nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a>
+        </div>
+    </nav>
+
+    <script>
+        /* ── THEME ── */
+        (function() {
+            const toggle = document.getElementById('theme-toggle'); const sun = document.getElementById('theme-icon-sun'); const moon = document.getElementById('theme-icon-moon');
+            const stored = localStorage.getItem('samyoj-theme');
+            function apply(d) { document.documentElement.classList.toggle('dark', d); sun.style.display = d ? 'none' : 'block'; moon.style.display = d ? 'block' : 'none'; }
+            if (stored === 'dark') apply(true); else if (stored === 'light') apply(false); else apply(window.matchMedia('(prefers-color-scheme: dark)').matches);
+            toggle.addEventListener('click', () => { const d = document.documentElement.classList.toggle('dark'); localStorage.setItem('samyoj-theme', d ? 'dark' : 'light'); sun.style.display = d ? 'none' : 'block'; moon.style.display = d ? 'block' : 'none'; });
+        })();
+
+        const API = '/api';
+        let allVendors = [];
+
+        function getCoverClass(category) {
+            const cat = (category || '').toLowerCase();
+            if (cat.includes('cater')) return 'cover-catering';
+            if (cat.includes('decor') || cat.includes('floral')) return 'cover-decoration';
+            if (cat.includes('light') || cat.includes('sound') || cat.includes('dj')) return 'cover-lighting';
+            if (cat.includes('photo') || cat.includes('video')) return 'cover-photography';
+            if (cat.includes('venue') || cat.includes('hall')) return 'cover-venue';
+            if (cat.includes('clean') || cat.includes('sanit')) return 'cover-cleaning';
+            if (cat.includes('staff') || cat.includes('labor') || cat.includes('manpower')) return 'cover-staff';
+            return 'cover-general';
+        }
+
+        function getInitials(name) {
+            if (!name) return '?';
+            return name.split(' ').map(w => w.charAt(0).toUpperCase()).slice(0, 2).join('');
+        }
+
+        function renderVendors(vendors) {
+            const grid = document.getElementById('vendor-grid');
+            const countEl = document.getElementById('vendor-count');
+            countEl.textContent = `${vendors.length} vendor${vendors.length !== 1 ? 's' : ''} found`;
+
+            if (!vendors.length) {
+                grid.innerHTML = `<div class="empty-state-big" style="grid-column: 1/-1;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <div>No vendors found matching your search.</div>
+                </div>`;
+                return;
+            }
+
+            grid.innerHTML = vendors.map(v => {
+                const coverClass = getCoverClass(v.category);
+                const initials = getInitials(v.name);
+                const servicesHtml = (v.services || []).slice(0, 5).map(s =>
+                    `<span class="vendor-service-tag">${s.name} — ₹${s.price?.toLocaleString('en-IN')}</span>`
+                ).join('');
+                const vendorContact = v.email || v.phone || '';
+
+                return `
+                    <div class="vendor-card">
+                        <div class="vendor-cover ${coverClass}">${initials}</div>
+                        <div class="vendor-body">
+                            <div class="vendor-type">${v.category || 'General'}</div>
+                            <h2 class="vendor-name">${v.name}</h2>
+                            <div class="vendor-rating-badge">★ ${v.rating} (${v.reviewCount}+ reviews)</div>
+                            ${v.description ? `<p class="vendor-desc">${v.description}</p>` : ''}
+                            ${v.location && v.location !== 'Not specified' ? `<div class="vendor-location">📍 ${v.location}</div>` : ''}
+                            ${servicesHtml ? `<div class="vendor-services-list">${servicesHtml}</div>` : '<p class="vendor-desc" style="font-style:italic;">No services listed yet.</p>'}
+                            <div class="vendor-contact-row">
+                                ${v.phone ? `<div class="contact-item"><span>📞</span> <span>${v.phone}</span></div>` : ''}
+                                ${v.email ? `<div class="contact-item"><span>✉️</span> <span>${v.email}</span></div>` : ''}
+                            </div>
+                            ${(v.services && v.services.length) ? `<a href="event-services.html?vendor=${encodeURIComponent(vendorContact)}" class="book-btn">Book This Vendor →</a>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterVendors() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const catFilter = document.getElementById('category-filter').value.toLowerCase();
+
+            let filtered = allVendors;
+
+            if (query) {
+                filtered = filtered.filter(v => {
+                    const searchable = [
+                        v.name, v.category, v.location, v.description,
+                        ...(v.services || []).map(s => s.name)
+                    ].join(' ').toLowerCase();
+                    return searchable.includes(query);
+                });
+            }
+
+            if (catFilter) {
+                filtered = filtered.filter(v => (v.category || '').toLowerCase().includes(catFilter));
+            }
+
+            renderVendors(filtered);
+        }
+
+        async function loadVendors() {
+            try {
+                const res = await fetch(API + '/vendors');
+                const data = await res.json();
+                allVendors = data.vendors || [];
+                renderVendors(allVendors);
+            } catch(e) {
+                console.error('Failed to load vendors:', e);
+                document.getElementById('vendor-grid').innerHTML = `<div class="empty-state-big" style="grid-column: 1/-1;">
+                    <div>Failed to load vendors. Make sure the server is running.</div>
+                </div>`;
+            }
+        }
+
+        loadVendors();
+    </script>
+</body>
+</html>

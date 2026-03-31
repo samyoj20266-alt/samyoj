@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | samyoj</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .profile-wrap {
+            max-width: 560px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem;
+        }
+        .profile-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--gradient-glow);
+            pointer-events: none;
+            border-radius: inherit;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="customer-dashboard.html" class="logo">samyoj</a>
+            <div class="nav-links">
+                <a href="customer-dashboard.html">Discover</a>
+                <a href="vendor-directory.html">Find Vendors</a>
+                <a href="find-on-map.html">Map Search</a>
+                <a href="my-bookings.html">My Bookings</a>
+                <a href="profile.html" class="active">Profile</a>
+                <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">
+                    <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+                <a href="index.html" class="btn btn-outline" style="padding: 0.4rem 1rem;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="profile-wrap">
+        <h1 style="font-size: 1.625rem; font-weight: 800; letter-spacing: -0.025em; margin-bottom: 1.5rem;">Profile Settings</h1>
+
+        <div class="profile-card">
+            <div id="profile-message" style="display: none; padding: 1rem; margin-bottom: 1rem; border-radius: var(--radius-md); text-align: center; font-size: 0.8125rem; font-weight: 500;"></div>
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" id="full-name" class="form-control" value="Loading..." readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" id="email-address" class="form-control" value="Loading..." readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="text" id="phone-number" class="form-control" value="Loading..." readonly>
+            </div>
+            <button id="edit-save-btn" class="btn btn-primary" style="width: 100%;">Edit Profile</button>
+        </div>
+    </div>
+
+    <!-- ═══ BOTTOM NAV (mobile) ═══ -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-inner">
+            <a class="bottom-nav-item" href="customer-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Discover</a>
+            <a class="bottom-nav-item" href="vendor-directory.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Vendors</a>
+            <a class="bottom-nav-item" href="my-bookings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Bookings</a>
+            <a class="bottom-nav-item" href="find-on-map.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Map</a>
+            <a class="bottom-nav-item active" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a>
+        </div>
+    </nav>
+
+    <script>
+        /* ── THEME ── */
+        (function() {
+            const toggle = document.getElementById('theme-toggle'); const sun = document.getElementById('theme-icon-sun'); const moon = document.getElementById('theme-icon-moon');
+            const stored = localStorage.getItem('samyoj-theme');
+            function apply(d) { document.documentElement.classList.toggle('dark', d); sun.style.display = d ? 'none' : 'block'; moon.style.display = d ? 'block' : 'none'; }
+            if (stored === 'dark') apply(true); else if (stored === 'light') apply(false); else apply(window.matchMedia('(prefers-color-scheme: dark)').matches);
+            toggle.addEventListener('click', () => { const d = document.documentElement.classList.toggle('dark'); localStorage.setItem('samyoj-theme', d ? 'dark' : 'light'); sun.style.display = d ? 'none' : 'block'; moon.style.display = d ? 'block' : 'none'; });
+        })();
+
+        const API_URL = '/api';
+        const role = localStorage.getItem('userRole');
+        const contact = localStorage.getItem('userContact');
+
+        if (!role || !contact) window.location.href = 'index.html';
+
+        document.querySelector('.logo').href = role + '-dashboard.html';
+        document.querySelectorAll('.nav-links a')[0].href = role + '-dashboard.html';
+
+        async function fetchProfile() {
+            try {
+                const res = await fetch(`${API_URL}/get-profile`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ role, contact }) });
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('full-name').value = data.name || '';
+                    document.getElementById('email-address').value = data.email || '';
+                    document.getElementById('phone-number').value = data.phone || '';
+                }
+            } catch (err) { console.error("Profile fetch error:", err); }
+        }
+
+        let isEditing = false;
+        const btn = document.getElementById('edit-save-btn');
+        const fields = ['full-name', 'email-address', 'phone-number'];
+
+        btn.addEventListener('click', async () => {
+            if (!isEditing) {
+                isEditing = true;
+                btn.innerText = 'Save Changes';
+                fields.forEach(id => document.getElementById(id).removeAttribute('readonly'));
+            } else {
+                const name = document.getElementById('full-name').value;
+                const email = document.getElementById('email-address').value;
+                const phone = document.getElementById('phone-number').value;
+                try {
+                    const res = await fetch(`${API_URL}/update-profile`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ role, originalContact: contact, name, email, phone }) });
+                    const msgDiv = document.getElementById('profile-message');
+                    msgDiv.style.display = 'block';
+                    if (res.ok) {
+                        msgDiv.innerText = 'Profile updated successfully!';
+                        msgDiv.style.backgroundColor = 'var(--badge-success-bg)';
+                        msgDiv.style.color = 'var(--badge-success-text)';
+                        const newContact = email || phone;
+                        if (newContact) localStorage.setItem('userContact', newContact);
+                        localStorage.setItem('userName', name);
+                        localStorage.setItem('customerProfile', JSON.stringify({ name, mobile: phone, email }));
+                        isEditing = false;
+                        btn.innerText = 'Edit Profile';
+                        fields.forEach(id => document.getElementById(id).setAttribute('readonly', true));
+                        setTimeout(() => msgDiv.style.display = 'none', 3000);
+                    } else {
+                        const data = await res.json();
+                        msgDiv.innerText = data.message || 'Update failed.';
+                        msgDiv.style.backgroundColor = 'var(--badge-danger-bg)';
+                        msgDiv.style.color = 'var(--badge-danger-text)';
+                    }
+                } catch (err) { alert("Backend error."); }
+            }
+        });
+
+        fetchProfile();
+    </script>
+</body>
+</html>

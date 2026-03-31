@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Services | samyoj</title>
+    <meta name="description" content="Select and book verified event services for catering, decoration, lighting, and more on samyoj.">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <style>
+        .services-layout { display: flex; min-height: calc(100vh - 52px); }
+        .main-content { flex: 1; padding: 2rem 2.5rem; max-width: 880px; }
+
+        .cost-panel {
+            width: 300px;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border-glass);
+            padding: 1.5rem;
+            position: sticky;
+            top: 52px;
+            height: calc(100vh - 52px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .breadcrumb { color: var(--text-muted); font-size: 0.75rem; margin-bottom: 0.75rem; font-weight: 500; }
+        .breadcrumb a { color: var(--primary); }
+        .category-title { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-light); }
+
+        .vendor-card {
+            background: var(--bg-card); border-radius: var(--radius-xl); padding: 1.25rem;
+            display: flex; gap: 1.25rem; margin-bottom: 1rem;
+            border: 1px solid var(--border); box-shadow: var(--shadow-xs);
+            transition: all 0.2s; position: relative; overflow: hidden;
+        }
+        .vendor-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--gradient-glow); pointer-events: none; border-radius: inherit; }
+        .vendor-card:hover { transform: scale(1.02); box-shadow: var(--shadow-glow); border-color: var(--primary); }
+
+        .vendor-img-placeholder { width: 88px; height: 88px; border-radius: var(--radius-lg); flex-shrink: 0; background: var(--border); animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; color: var(--text-faint); }
+
+        .vendor-info { flex: 1; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 2; }
+        .vendor-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.375rem; }
+        .vendor-name { font-size: 0.9375rem; font-weight: 700; letter-spacing: -0.01em; }
+        .vendor-rating { display: flex; align-items: center; gap: 0.25rem; background: var(--badge-pending-bg); color: var(--badge-pending-text); padding: 0.1875rem 0.5rem; border-radius: 9999px; font-size: 0.6875rem; font-weight: 600; }
+        .vendor-desc { color: var(--text-muted); font-size: 0.8125rem; margin-bottom: 0.75rem; line-height: 1.5; }
+        .vendor-actions { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .vendor-price { font-weight: 800; font-size: 1rem; color: var(--text-primary); letter-spacing: -0.02em; }
+
+        .select-btn-label { display: inline-flex; cursor: pointer; }
+        .select-btn-label input[type="checkbox"] { display: none; }
+        .select-btn-ui { padding: 0.375rem 1rem; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); border-radius: var(--radius-md); font-weight: 500; font-size: 0.8125rem; transition: all 0.15s; user-select: none; }
+        .select-btn-label input:checked + .select-btn-ui { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 1px 2px rgba(168,85,247,0.3); }
+        .select-btn-label input:checked + .select-btn-ui::after { content: "✓ Selected"; }
+        .select-btn-label input:not(:checked) + .select-btn-ui::after { content: "Select"; }
+        .select-btn-label:hover .select-btn-ui { border-color: var(--primary); }
+        .select-btn-label input:checked + .select-btn-ui:hover { background: var(--primary-dark); }
+
+        .panel-title { font-size: 1rem; font-weight: 700; margin-bottom: 1.25rem; letter-spacing: -0.015em; }
+        .selected-list { flex: 1; overflow-y: auto; margin-bottom: 1.25rem; }
+        .selected-list li { padding: 0.625rem 0; border-bottom: 1px solid var(--border-light); font-size: 0.8125rem; }
+        .selected-list li:last-child { border-bottom: none; }
+        .total-section { padding-top: 1.25rem; border-top: 1px solid var(--border); margin-top: auto; }
+        .total-row { display: flex; justify-content: space-between; font-size: 1.125rem; font-weight: 800; margin-bottom: 1.25rem; letter-spacing: -0.02em; }
+
+        .vendor-info-banner {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius-xl); padding: 1.25rem 1.5rem;
+            margin-bottom: 2rem; position: relative; overflow: hidden;
+        }
+        .vendor-info-banner::before { content:''; position:absolute; top:0; left:0; width:100%; height:100%; background: var(--gradient-glow); pointer-events:none; border-radius:inherit; }
+        .vendor-info-banner h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem; position:relative; z-index:2; }
+        .vendor-info-banner p { font-size: 0.8125rem; color: var(--text-muted); position:relative; z-index:2; }
+
+        .empty-state-services { text-align: center; padding: 3rem 2rem; color: var(--text-muted); }
+
+        @media (max-width: 900px) { .services-layout { flex-direction: column; } .cost-panel { width: 100%; height: auto; position: static; border-left: none; border-top: 1px solid var(--border-glass); } .vendor-card { flex-direction: column; } .vendor-img-placeholder { width: 100%; height: 100px; } .main-content { padding: 1.5rem; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="customer-dashboard.html" class="logo">samyoj</a>
+            <div class="nav-links">
+                <a href="customer-dashboard.html">Discover</a>
+                <a href="vendor-directory.html">Find Vendors</a>
+                <a href="find-on-map.html">Map Search</a>
+                <a href="my-bookings.html">My Bookings</a>
+                <a href="profile.html">Profile</a>
+                <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">
+                    <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+                <a href="index.html" class="btn btn-outline" style="padding: 0.375rem 0.875rem; font-size: 0.8125rem;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="services-layout" style="max-width: 1280px; margin: 0 auto;">
+        <main class="main-content">
+            <div style="margin-bottom: 2rem;">
+                <div class="breadcrumb"><a href="customer-dashboard.html">Home</a> &gt; <a href="vendor-directory.html">Vendors</a> &gt; <span id="breadcrumb-vendor">Services</span></div>
+                <h1 id="page-title" style="font-size: 1.5rem; font-weight: 800; letter-spacing: -0.025em; margin-bottom: 0.375rem;">Select Services</h1>
+                <p class="text-muted" style="font-size: 0.875rem;">Choose services from this vendor to include in your booking.</p>
+            </div>
+
+            <!-- Vendor Info Banner -->
+            <div class="vendor-info-banner" id="vendor-banner" style="display: none;">
+                <h2 id="vendor-biz-name"></h2>
+                <p id="vendor-biz-info"></p>
+            </div>
+
+            <div id="services-container">
+                <div class="empty-state-services">Loading vendor services...</div>
+            </div>
+        </main>
+
+        <aside class="cost-panel">
+            <h3 class="panel-title">Estimated Cost</h3>
+            <ul class="selected-list" id="selected-services-list"><li style="color: var(--text-muted); font-size: 0.8125rem;">No services selected</li></ul>
+            <div class="total-section">
+                <div class="total-row"><span>Total</span><span id="total-cost" style="color: var(--primary);">₹0</span></div>
+                <button class="btn btn-primary" style="width: 100%;" onclick="proceedToBook()">Proceed to Book</button>
+                <p class="text-center text-muted" style="font-size: 0.6875rem; margin-top: 0.875rem; line-height: 1.4;">Prices are estimates and subject to final confirmation.</p>
+            </div>
+        </aside>
+    </div>
+
+    <!-- ═══ BOTTOM NAV (mobile) ═══ -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-inner">
+            <a class="bottom-nav-item" href="customer-dashboard.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Discover</a>
+            <a class="bottom-nav-item" href="vendor-directory.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Vendors</a>
+            <a class="bottom-nav-item" href="my-bookings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Bookings</a>
+            <a class="bottom-nav-item" href="find-on-map.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Map</a>
+            <a class="bottom-nav-item" href="profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a>
+        </div>
+    </nav>
+
+    <script>
+        /* ── THEME ── */
+        (function() {
+            const toggle = document.getElementById('theme-toggle'); const sun = document.getElementById('theme-icon-sun'); const moon = document.getElementById('theme-icon-moon');
+            const stored = localStorage.getItem('samyoj-theme');
+            function apply(d) { document.documentElement.classList.toggle('dark', d); sun.style.display = d ? 'none' : 'block'; moon.style.display = d ? 'block' : 'none'; }
+            if (stored === 'dark') apply(true); else if (stored === 'light') apply(false); else apply(window.matchMedia('(prefers-color-scheme: dark)').matches);
+            toggle.addEventListener('click', () => { const d = document.documentElement.classList.toggle('dark'); localStorage.setItem('samyoj-theme', d ? 'dark' : 'light'); sun.style.display = d ? 'none' : 'block'; moon.style.display = d ? 'block' : 'none'; });
+        })();
+
+        const API = '/api';
+        const params = new URLSearchParams(window.location.search);
+        const vendorParam = params.get('vendor') || '';
+        const eventType = params.get('event') || 'wedding';
+        let currentVendor = {};
+
+        async function loadVendorServices() {
+            if (!vendorParam) {
+                // No vendor specified — show all vendors' services
+                loadAllVendors();
+                return;
+            }
+
+            try {
+                const res = await fetch(API + '/vendor-services/' + encodeURIComponent(vendorParam));
+                const data = await res.json();
+                currentVendor = data.vendor || {};
+                const services = data.services || [];
+
+                // Update page info
+                document.getElementById('breadcrumb-vendor').textContent = currentVendor.name || 'Vendor';
+                document.getElementById('page-title').textContent = `Services by ${currentVendor.name || 'Vendor'}`;
+
+                const banner = document.getElementById('vendor-banner');
+                banner.style.display = 'block';
+                document.getElementById('vendor-biz-name').textContent = currentVendor.name || 'Vendor';
+                document.getElementById('vendor-biz-info').textContent = [currentVendor.category, currentVendor.location].filter(Boolean).join(' · ') || 'Event Services';
+
+                const container = document.getElementById('services-container');
+
+                if (!services.length) {
+                    container.innerHTML = '<div class="empty-state-services">This vendor hasn\'t listed any services yet.</div>';
+                    return;
+                }
+
+                container.innerHTML = services.map((s, i) => `
+                    <div class="vendor-card">
+                        <div class="vendor-img-placeholder">${s.name.charAt(0).toUpperCase()}</div>
+                        <div class="vendor-info">
+                            <div class="vendor-header-row">
+                                <h3 class="vendor-name">${s.name}</h3>
+                            </div>
+                            <p class="vendor-desc">${s.description || 'Service offered by the vendor.'}</p>
+                            <div class="vendor-actions">
+                                <div class="vendor-price">₹${Number(s.price).toLocaleString('en-IN')}</div>
+                                <label class="select-btn-label">
+                                    <input type="checkbox" class="service-checkbox" data-name="${s.name}" data-price="${s.price}" onchange="updateCost()">
+                                    <div class="select-btn-ui"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch(e) {
+                console.error('Failed to load vendor services:', e);
+                document.getElementById('services-container').innerHTML = '<div class="empty-state-services">Failed to load services. Please try again.</div>';
+            }
+        }
+
+        async function loadAllVendors() {
+            // Load all vendors with services
+            try {
+                const res = await fetch(API + '/vendors');
+                const data = await res.json();
+                const vendors = (data.vendors || []).filter(v => v.services && v.services.length > 0);
+
+                document.getElementById('page-title').textContent = 'All Available Services';
+                document.getElementById('breadcrumb-vendor').textContent = 'All Services';
+
+                const container = document.getElementById('services-container');
+
+                if (!vendors.length) {
+                    container.innerHTML = '<div class="empty-state-services">No vendors with services found. Check back later!</div>';
+                    return;
+                }
+
+                container.innerHTML = vendors.map(v => `
+                    <section style="margin-bottom: 2.5rem;">
+                        <h2 class="category-title">${v.name} · ${v.category || 'General'}</h2>
+                        ${v.services.map(s => `
+                            <div class="vendor-card">
+                                <div class="vendor-img-placeholder">${s.name.charAt(0).toUpperCase()}</div>
+                                <div class="vendor-info">
+                                    <div class="vendor-header-row">
+                                        <h3 class="vendor-name">${s.name}</h3>
+                                    </div>
+                                    <p class="vendor-desc">${s.description || 'Service offered by ' + v.name}</p>
+                                    <div class="vendor-actions">
+                                        <div class="vendor-price">₹${Number(s.price).toLocaleString('en-IN')}</div>
+                                        <label class="select-btn-label">
+                                            <input type="checkbox" class="service-checkbox" data-name="${s.name}" data-price="${s.price}" data-vendor="${v.email || v.phone || ''}" data-vendor-name="${v.name}" onchange="updateCost()">
+                                            <div class="select-btn-ui"></div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </section>
+                `).join('');
+
+            } catch(e) {
+                console.error('Failed to load all vendors:', e);
+            }
+        }
+
+        function updateCost() {
+            const checkboxes = document.querySelectorAll('.service-checkbox:checked');
+            const list = document.getElementById('selected-services-list');
+            const totalEl = document.getElementById('total-cost');
+
+            if (!checkboxes.length) {
+                list.innerHTML = '<li style="color: var(--text-muted); font-size: 0.8125rem;">No services selected</li>';
+                totalEl.textContent = '₹0';
+                return;
+            }
+
+            let total = 0;
+            let html = '';
+            checkboxes.forEach(cb => {
+                const name = cb.dataset.name;
+                const price = parseInt(cb.dataset.price) || 0;
+                total += price;
+                html += `<li style="display: flex; justify-content: space-between;"><span>${name}</span><span style="font-weight: 600;">₹${price.toLocaleString('en-IN')}</span></li>`;
+            });
+
+            list.innerHTML = html;
+            totalEl.textContent = '₹' + total.toLocaleString('en-IN');
+        }
+
+        async function proceedToBook() {
+            const checkboxes = document.querySelectorAll('.service-checkbox:checked');
+            if (!checkboxes.length) {
+                alert('Please select at least one service.');
+                return;
+            }
+
+            const customerContact = localStorage.getItem('userContact') || '';
+            const customerName = localStorage.getItem('userName') || 'Unknown';
+
+            const services = [];
+            let total = 0;
+            let bookingVendorContact = vendorParam;
+            let bookingVendorName = currentVendor.name || '';
+
+            checkboxes.forEach(cb => {
+                services.push({ name: cb.dataset.name, price: parseInt(cb.dataset.price) || 0 });
+                total += parseInt(cb.dataset.price) || 0;
+                if (!bookingVendorContact && cb.dataset.vendor) {
+                    bookingVendorContact = cb.dataset.vendor;
+                    bookingVendorName = cb.dataset.vendorName || '';
+                }
+            });
+
+            try {
+                const res = await fetch(API + '/book-event', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contact: customerContact,
+                        vendorContact: bookingVendorContact,
+                        vendorName: bookingVendorName,
+                        eventType: eventType,
+                        services: services,
+                        totalCost: total,
+                        bookingDate: new Date().toISOString().split('T')[0],
+                        customerName: customerName,
+                        customerMobile: ''
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Booking submitted successfully! The vendor will review your request.');
+                    window.location.href = 'my-bookings.html';
+                } else {
+                    alert(data.message || 'Booking failed.');
+                }
+            } catch(e) {
+                alert('Failed to submit booking. Make sure the server is running.');
+            }
+        }
+
+        loadVendorServices();
+    </script>
+</body>
+</html>

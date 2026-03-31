@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings | samyoj</title>
+    <meta name="description" content="View and manage your event bookings on samyoj.">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .page-wrap { max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+        .page-wrap h1 { font-size: 1.625rem; font-weight: 800; letter-spacing: -0.025em; }
+        .page-wrap > p { color: var(--text-muted); font-size: 0.875rem; margin-top: 0.25rem; }
+
+        .booking-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .booking-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--gradient-glow);
+            pointer-events: none;
+            border-radius: inherit;
+        }
+        .booking-card:hover { transform: scale(1.02); box-shadow: var(--shadow-glow); border-color: var(--primary); }
+
+        .booking-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); }
+        .booking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem; }
+        .booking-cell { padding: 0.875rem; background: var(--bg-elevated); border-radius: var(--radius-lg); border: 1px solid var(--border-light); }
+        .booking-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--border-light); }
+
+        .empty-box { padding: 4rem 2rem; text-align: center; background: var(--bg-card); border-radius: var(--radius-xl); border: 1px dashed var(--border); }
+        .empty-box .icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+        .empty-box h3 { font-size: 1.0625rem; font-weight: 700; margin-bottom: 0.375rem; }
+        .empty-box p { color: var(--text-muted); font-size: 0.8125rem; margin-bottom: 1.25rem; }
+
+        @media (max-width: 600px) { .booking-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="customer-dashboard.html" class="logo">samyoj</a>
+            <div class="nav-links">
+                <a href="customer-dashboard.html">Discover</a>
+                <a href="vendor-directory.html">Find Vendors</a>
+                <a href="find-on-map.html">Map Search</a>
+                <a href="my-bookings.html" class="active">My Bookings</a>
+                <a href="profile.html">Profile</a>
+                <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">
+                    <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    <svg id="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+                <a href="index.html" class="btn btn-outline" style="padding: 0.375rem 0.875rem; font-size: 0.8125rem;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-wrap">
+        <h1>My Bookings</h1>
+        <p>Manage your upcoming and past event bookings.</p>
+        <div id="bookings-container" style="margin-top: 2rem;">
+            <!-- Skeleton loading -->
+            <div class="booking-card">
+                <div style="display:flex;justify-content:space-between;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--border-light);">
+                    <div><div class="skeleton skeleton-text" style="width:100px;"></div><div class="skeleton skeleton-text" style="width:180px;margin-top:0.5rem;"></div></div>
+                    <div class="skeleton" style="width:70px;height:24px;border-radius:9999px;"></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;">
+                    <div class="skeleton" style="height:80px;border-radius:var(--radius-lg);"></div>
+                    <div class="skeleton" style="height:80px;border-radius:var(--radius-lg);"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding-top:1rem;border-top:1px solid var(--border-light);">
+                    <div class="skeleton skeleton-text" style="width:80px;"></div>
+                    <div class="skeleton skeleton-text" style="width:100px;"></div>
+                </div>
+            </div>
+            <div class="booking-card">
+                <div style="display:flex;justify-content:space-between;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--border-light);">
+                    <div><div class="skeleton skeleton-text" style="width:90px;"></div><div class="skeleton skeleton-text" style="width:150px;margin-top:0.5rem;"></div></div>
+                    <div class="skeleton" style="width:60px;height:24px;border-radius:9999px;"></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;">
+                    <div class="skeleton" style="height:80px;border-radius:var(--radius-lg);"></div>
+                    <div class="skeleton" style="height:80px;border-radius:var(--radius-lg);"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding-top:1rem;border-top:1px solid var(--border-light);">
+                    <div class="skeleton skeleton-text" style="width:80px;"></div>
+                    <div class="skeleton skeleton-text" style="width:100px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ BOTTOM NAV (mobile) ═══ -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-inner">
+            <a class="bottom-nav-item" href="customer-dashboard.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Discover
+            </a>
+            <a class="bottom-nav-item" href="vendor-directory.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Vendors
+            </a>
+            <a class="bottom-nav-item active" href="my-bookings.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Bookings
+            </a>
+            <a class="bottom-nav-item" href="find-on-map.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+            </a>
+            <a class="bottom-nav-item" href="profile.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Profile
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        /* ── THEME ── */
+        (function() {
+            const toggle = document.getElementById('theme-toggle');
+            const sun = document.getElementById('theme-icon-sun');
+            const moon = document.getElementById('theme-icon-moon');
+            const stored = localStorage.getItem('samyoj-theme');
+            function apply(dark) { document.documentElement.classList.toggle('dark', dark); sun.style.display = dark ? 'none' : 'block'; moon.style.display = dark ? 'block' : 'none'; }
+            if (stored === 'dark') apply(true); else if (stored === 'light') apply(false); else apply(window.matchMedia('(prefers-color-scheme: dark)').matches);
+            toggle.addEventListener('click', () => { const d = document.documentElement.classList.toggle('dark'); localStorage.setItem('samyoj-theme', d ? 'dark' : 'light'); sun.style.display = d ? 'none' : 'block'; moon.style.display = d ? 'block' : 'none'; });
+        })();
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('bookings-container');
+            const contact = localStorage.getItem('userContact');
+            if (!contact) {
+                container.innerHTML = '<div class="empty-box"><div class="icon">🔒</div><h3>Please Login</h3><p>You need to be logged in to view your bookings.</p><a href="customer-login.html" class="btn btn-primary">Login Now</a></div>';
+                return;
+            }
+            try {
+                const profile = JSON.parse(localStorage.getItem('customerProfile') || '{}');
+                const altContacts = [];
+                if (profile.email) altContacts.push(profile.email);
+                if (profile.mobile) altContacts.push(profile.mobile);
+                const res = await fetch('/api/get-my-bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contact, altContacts }) });
+                const data = await res.json();
+                if (data.bookings) data.bookings = data.bookings.filter(b => b.status !== 'Rejected');
+
+                if (data.bookings && data.bookings.length > 0) {
+                    container.innerHTML = '';
+                    data.bookings.reverse().forEach(b => {
+                        const statusCls = b.status === 'Approved' ? 'badge-approved' : b.status === 'Pending' ? 'badge-pending' : 'badge-rejected';
+                        const servicesHtml = b.services.map(s => `<div style="display:flex;justify-content:space-between;font-size:0.8125rem;padding:0.25rem 0;border-bottom:1px solid var(--border-light);"><span style="color:var(--text-secondary);">${s.name}</span><span style="color:var(--text-muted);font-weight:500;">₹${s.price.toLocaleString('en-IN')}</span></div>`).join('');
+                        const custName = b.customerName && b.customerName !== 'Unknown' ? b.customerName : 'Guest User';
+                        const card = document.createElement('div');
+                        card.className = 'booking-card section-animate';
+                        card.innerHTML = `
+                            <div class="booking-header">
+                                <div>
+                                    <div class="micro-label">Order ID</div>
+                                    <div style="font-size:0.75rem;color:var(--text-muted);font-weight:500;margin-bottom:0.25rem;font-family:monospace;">${b.id}</div>
+                                    <h3 style="font-size:1.0625rem;font-weight:700;letter-spacing:-0.015em;text-transform:capitalize;">${b.eventType} Event</h3>
+                                </div>
+                                <div style="text-align:right;">
+                                    <span class="badge ${statusCls}">${b.status}</span>
+                                    <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.5rem;">${b.bookingDate}</div>
+                                </div>
+                            </div>
+                            <div class="booking-grid">
+                                <div class="booking-cell"><div class="micro-label">Booked Services</div>${servicesHtml}</div>
+                                <div class="booking-cell"><div class="micro-label">Vendor</div><div style="font-size:0.8125rem;color:var(--text-secondary);"><div style="font-weight:600;margin-bottom:0.25rem;">${b.vendorName || 'Not assigned'}</div><div style="color:var(--text-muted);">${b.vendorContact || ''}</div></div></div>
+                            </div>
+                            <div class="booking-footer">
+                                <div class="micro-label" style="margin-bottom:0;">Total Paid</div>
+                                <span style="font-size:1.125rem;font-weight:800;letter-spacing:-0.02em;color:var(--primary);">₹${b.totalCost.toLocaleString('en-IN')}</span>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                } else {
+                    container.innerHTML = '<div class="empty-box"><div class="icon">📅</div><h3>No Active Bookings</h3><p>You haven\'t booked any services yet. Start planning your event now!</p><a href="customer-dashboard.html" class="btn btn-primary">Start Planning</a></div>';
+                }
+            } catch (e) {
+                console.error('Error:', e);
+                container.innerHTML = '<div class="empty-box"><div class="icon">⚠️</div><h3>Connection Error</h3><p>Failed to load bookings. Please try again later.</p></div>';
+            }
+        });
+    </script>
+</body>
+</html>
