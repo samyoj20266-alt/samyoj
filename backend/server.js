@@ -237,7 +237,7 @@ app.post('/api/request-otp', async (req, res) => {
         console.log(`[DEV MODE OTP] Contact: ${contact} | Code: ${otp}`);
         console.log(`=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=\n`);
 
-        return res.status(500).json({ message: `OTP delivery blocked by Render. Go to Render Logs to see your OTP code: ${otp}`, otp });
+        return res.status(200).json({ message: `OTP delivery blocked by Render. Dev Mode Active: Your OTP Code is [ ${otp} ]`, otp });
     }
 });
 
