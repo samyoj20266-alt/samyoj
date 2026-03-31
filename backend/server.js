@@ -47,6 +47,9 @@ const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
     secure: true,
+    connectionTimeout: 5000,
+    greetingTimeout: 5000,
+    socketTimeout: 5000,
     auth: {
         user: process.env.GMAIL_USER || 'samyoj20266@gmail.com',
         pass: process.env.GMAIL_APP_PASSWORD
@@ -234,7 +237,7 @@ app.post('/api/request-otp', async (req, res) => {
         console.log(`[DEV MODE OTP] Contact: ${contact} | Code: ${otp}`);
         console.log(`=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=x=\n`);
 
-        return res.status(200).json({ message: `Failed to send through provider, but OTP logged to Node terminal locally.`, otp });
+        return res.status(500).json({ message: `OTP delivery blocked by Render. Go to Render Logs to see your OTP code: ${otp}`, otp });
     }
 });
 
