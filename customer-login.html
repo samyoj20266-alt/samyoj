@@ -264,6 +264,26 @@
         }
         .theme-toggle-float:hover { border-color: var(--primary); }
         .theme-toggle-float svg { width: 18px; height: 18px; color: var(--text-secondary); }
+    
+        .password-wrapper { position: relative; display: flex; align-items: center; }
+        .password-toggle { 
+            position: absolute; right: 1rem; 
+            background: none; border: none; padding: 0; 
+            color: var(--text-muted); cursor: pointer; display: flex; outline: none;
+        }
+        .password-toggle:hover { color: var(--text-primary); }
+        .password-toggle svg { width: 1.25rem; height: 1.25rem; }
+        
+        .password-strength { margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted); display: none; margin-bottom: 0.5rem; }
+        .strength-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin-top: 0.25rem; margin-bottom: 0.25rem;}
+        .strength-fill { height: 100%; width: 0%; transition: width 0.3s, background-color 0.3s; }
+        .strength-text { font-weight: 600; margin-bottom: 0.25rem; }
+        .strength-reqs { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem; }
+        .strength-reqs li { display: flex; align-items: center; gap: 0.25rem; font-size: 0.6875rem;}
+        .strength-reqs li::before { content: '○'; font-size: 0.6rem; }
+        .strength-reqs li.valid::before { content: '●'; color: #22c55e; }
+        .strength-reqs li.valid { color: var(--text-secondary); }
+
     </style>
 </head>
 <body>
@@ -295,7 +315,12 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="login-password">Password</label>
-                    <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('login-password', this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </div>
                 </div>
                 <div class="remember-row">
                     <label><input type="checkbox"> Remember me</label>
@@ -313,7 +338,22 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="reg-password">Password</label>
-                    <input type="password" id="reg-password" class="form-control" placeholder="Create a strong password" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="reg-password" class="form-control" placeholder="Create a strong password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('reg-password', this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </div>
+                    <div class="password-strength" id="reg-password-strength">
+                        <div class="strength-bar"><div class="strength-fill"></div></div>
+                        <div class="strength-text">Weak</div>
+                        <ul class="strength-reqs">
+                            <li class="req-length">At least 8 characters</li>
+                            <li class="req-upper">Uppercase letter</li>
+                            <li class="req-number">Number</li>
+                            <li class="req-special">Special character</li>
+                        </ul>
+                    </div>
                 </div>
                 <button type="submit" class="btn-auth">Create Account →</button>
             </form>
@@ -339,11 +379,31 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="reset-password">New Password</label>
-                    <input type="password" id="reset-password" class="form-control" placeholder="Enter new password" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="reset-password" class="form-control" placeholder="Enter new password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('reset-password', this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </div>
+                    <div class="password-strength" id="reset-password-strength">
+                        <div class="strength-bar"><div class="strength-fill"></div></div>
+                        <div class="strength-text">Weak</div>
+                        <ul class="strength-reqs">
+                            <li class="req-length">At least 8 characters</li>
+                            <li class="req-upper">Uppercase letter</li>
+                            <li class="req-number">Number</li>
+                            <li class="req-special">Special character</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="reset-confirm-password">Confirm Password</label>
-                    <input type="password" id="reset-confirm-password" class="form-control" placeholder="Confirm new password" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="reset-confirm-password" class="form-control" placeholder="Confirm new password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword('reset-confirm-password', this)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </div>
                 </div>
                 <div id="reset-error" class="error-msg"></div>
                 <div id="reset-success" class="success-msg">Password reset successfully!</div>
@@ -413,6 +473,10 @@
             e.preventDefault();
             const contact = document.getElementById('reg-email').value.trim();
             const pass = document.getElementById('reg-password').value;
+            if (pass.length < 8 || !/[A-Z]/.test(pass) || !/[0-9]/.test(pass) || !/[^A-Za-z0-9]/.test(pass)) {
+                alert('Please make sure your password meets all strength requirements.');
+                return;
+            }
             const isPhone = /^\+?\d+$/.test(contact.replace(/[\s-]/g, ''));
             try {
                 const res = await fetch(`${API_URL}/request-otp`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contact, isPhone }) });
@@ -482,6 +546,11 @@
             const newPass = document.getElementById('reset-password').value;
             const confirmPass = document.getElementById('reset-confirm-password').value;
             const errorDiv = document.getElementById('reset-error');
+            if (newPass.length < 8 || !/[A-Z]/.test(newPass) || !/[0-9]/.test(newPass) || !/[^A-Za-z0-9]/.test(newPass)) {
+                errorDiv.innerText = 'Please make sure your new password meets all strength requirements.';
+                errorDiv.style.display = 'block';
+                return;
+            }
             if (newPass !== confirmPass) { errorDiv.innerText = "Passwords do not match."; errorDiv.style.display = 'block'; return; }
             try {
                 const res = await fetch(`${API_URL}/reset-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ role, contact, newPassword: newPass, otp }) });
