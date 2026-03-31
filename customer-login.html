@@ -417,7 +417,7 @@
             try {
                 const res = await fetch(`${API_URL}/request-otp`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contact, isPhone }) });
                 const data = await res.json();
-                if (res.ok) { pendingRegistration = { contact, password: pass }; showForm('registerOtp'); alert(`OTP sent successfully. Please check your email/phone.`); }
+                if (res.ok) { pendingRegistration = { contact, password: pass }; showForm('registerOtp'); alert(data.message || `OTP sent successfully. Please check your email/phone.`); }
                 else { alert(data.message); }
             } catch (err) { alert("Error contacting backend server. Ensure node server.js is running!"); }
         }
@@ -467,8 +467,10 @@
                 const res = await fetch(`${API_URL}/request-otp`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contact, isPhone }) });
                 const data = await res.json();
                 if (res.ok) {
-                    msgElement.innerText = `OTP sent! Check your email or phone.`;
-                    setTimeout(() => { document.getElementById('forgot-contact').dataset.temp = contact; showForm('reset'); msgElement.style.display = 'none'; }, 2000);
+                    alert(data.message || `OTP sent! Check your email or phone.`);
+                    document.getElementById('forgot-contact').dataset.temp = contact; 
+                    showForm('reset'); 
+                    msgElement.style.display = 'none';
                 } else { msgElement.className = 'error-msg'; msgElement.style.display = 'block'; msgElement.innerText = data.message; }
             } catch (err) { msgElement.className = 'error-msg'; msgElement.style.display = 'block'; msgElement.innerText = "Backend error. Ensure it's running."; }
         }
