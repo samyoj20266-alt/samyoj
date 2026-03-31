@@ -1,0 +1,7 @@
+.env
+node_modules/
+users.json
+bookings.json
+test_db.js
+migration_script.js
+push.js

@@ -5,6 +5,14 @@ const twilio = require('twilio');
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
+require('dotenv').config();
+
+const { createClient } = require('@supabase/supabase-js');
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
+const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
+
 
 const app = express();
 const PORT = 3000;
@@ -69,10 +77,93 @@ if (twilioSid !== 'YOUR_TWILIO_SID' && twilioPhone !== 'YOUR_TWILIO_VIRTUAL_NUMB
 // UTILITY FUNCTIONS
 // ═══════════════════════════════════════════════
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
-const getUsers = () => JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
-const saveUsers = (data) => fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
-const getBookings = () => JSON.parse(fs.readFileSync(BOOKINGS_PATH, 'utf-8'));
-const saveBookings = (data) => fs.writeFileSync(BOOKINGS_PATH, JSON.stringify(data, null, 2));
+
+const getUsers = () => {
+    if (!fs.existsSync(DB_PATH)) return { customers: [], vendors: [] };
+    return JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
+};
+
+const getBookings = () => {
+    if (!fs.existsSync(BOOKINGS_PATH)) return [];
+    return JSON.parse(fs.readFileSync(BOOKINGS_PATH, 'utf-8'));
+};
+
+const saveUsers = (data) => {
+    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+    if (supabase) {
+        data.customers.forEach(async c => {
+            const { error } = await supabase.from('customers').upsert({
+                id: c.id, email: c.email || null, phone: c.phone || null, password: c.password,
+                name: c.name, location: c.location, created_at: c.createdAt
+            }, { onConflict: 'id' });
+            if (error) console.error('SB Cust Sync Error:', error.message);
+        });
+        data.vendors.forEach(async v => {
+            const { error } = await supabase.from('vendors').upsert({
+                id: v.id, email: v.email || null, phone: v.phone || null, password: v.password,
+                name: v.name, business_name: v.businessName, category: v.category,
+                location: v.location, description: v.description, services: v.services,
+                staff: v.staff, rating: v.rating, review_count: v.reviewCount,
+                lat: v.lat, lon: v.lon, created_at: v.createdAt
+            }, { onConflict: 'id' });
+            if (error) console.error('SB Vend Sync Error:', error.message);
+        });
+    }
+};
+
+const saveBookings = (data) => {
+    fs.writeFileSync(BOOKINGS_PATH, JSON.stringify(data, null, 2));
+    if (supabase) {
+        data.forEach(async b => {
+            const { error } = await supabase.from('bookings').upsert({
+                id: b.id, contact: b.contact, customer_name: b.customerName,
+                customer_mobile: b.customerMobile, event_type: b.eventType,
+                services: b.services, total_cost: b.totalCost, booking_date: b.bookingDate,
+                status: b.status, vendor_contact: b.vendorContact, vendor_name: b.vendorName
+            }, { onConflict: 'id' });
+            if (error) console.error('SB Booking Sync Error:', error.message);
+        });
+    }
+};
+
+// INITIAL SUPABASE RESTORE ON SERVER START
+async function syncFromSupabase() {
+    if (!supabase) return;
+    try {
+        console.log('Fetching live Database state from Supabase...');
+        const custRes = await supabase.from('customers').select('*');
+        const vendRes = await supabase.from('vendors').select('*');
+        if (!custRes.error && !vendRes.error && (custRes.data.length > 0 || vendRes.data.length > 0)) {
+            const memDb = { customers: [], vendors: [] };
+            memDb.customers = custRes.data.map(c => ({
+                id: c.id, email: c.email, phone: c.phone, password: c.password,
+                name: c.name, location: c.location, createdAt: c.created_at
+            }));
+            memDb.vendors = vendRes.data.map(v => ({
+                id: v.id, email: v.email, phone: v.phone, password: v.password,
+                name: v.name, businessName: v.business_name, category: v.category,
+                location: v.location, description: v.description, services: v.services,
+                staff: v.staff, rating: v.rating, reviewCount: v.review_count,
+                lat: v.lat, lon: v.lon, createdAt: v.created_at
+            }));
+            fs.writeFileSync(DB_PATH, JSON.stringify(memDb, null, 2));
+            console.log(`[Supabase] Restored ${memDb.customers.length} Customers & ${memDb.vendors.length} Vendors.`);
+        }
+
+        const bookRes = await supabase.from('bookings').select('*');
+        if (!bookRes.error && bookRes.data.length > 0) {
+            const bks = bookRes.data.map(b => ({
+                id: b.id, contact: b.contact, customerName: b.customer_name,
+                customerMobile: b.customer_mobile, eventType: b.event_type,
+                services: b.services, totalCost: b.total_cost, bookingDate: b.booking_date,
+                status: b.status, vendorContact: b.vendor_contact, vendorName: b.vendor_name
+            }));
+            fs.writeFileSync(BOOKINGS_PATH, JSON.stringify(bks, null, 2));
+            console.log(`[Supabase] Restored ${bks.length} Bookings.`);
+        }
+    } catch (e) { console.error('Supabase Restore Failed. Falling back to files:', e.message); }
+}
+syncFromSupabase();
 
 // Normalize contact for comparison
 function normalizeContact(c) {
@@ -167,6 +258,7 @@ app.post('/api/register', (req, res) => {
 
     // Create user with full profile fields
     const newUser = {
+        id: crypto.randomUUID(),
         email: emailValue,
         phone: phoneValue,
         password,
