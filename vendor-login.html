@@ -570,6 +570,57 @@
                 else { errorDiv.innerText = data.message; errorDiv.style.display = 'block'; }
             } catch (err) { errorDiv.innerText = "Backend connection error."; errorDiv.style.display = 'block'; }
         }
-    </script>
+    
+        /* ── PASSWORD LOGIC ── */
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const type = input.type === 'password' ? 'text' : 'password';
+            input.type = type;
+            btn.innerHTML = type === 'password' ? 
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' : 
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22"/></svg>';
+        }
+
+        function checkPasswordStrength(val, strengthDivId) {
+            const div = document.getElementById(strengthDivId);
+            if (!val) { div.style.display = 'none'; return false; }
+            div.style.display = 'block';
+
+            const reqs = {
+                length: val.length >= 8,
+                upper: /[A-Z]/.test(val),
+                number: /[0-9]/.test(val),
+                special: /[^A-Za-z0-9]/.test(val)
+            };
+
+            let score = 0;
+            if (reqs.length) score++;
+            if (reqs.upper) score++;
+            if (reqs.number) score++;
+            if (reqs.special) score++;
+
+            const fill = div.querySelector('.strength-fill');
+            const text = div.querySelector('.strength-text');
+
+            if (score <= 1) { fill.style.width = '25%'; fill.style.backgroundColor = '#ef4444'; text.innerText = 'Weak'; text.style.color = '#ef4444'; }
+            else if (score === 2) { fill.style.width = '50%'; fill.style.backgroundColor = '#eab308'; text.innerText = 'Fair'; text.style.color = '#eab308'; }
+            else if (score === 3) { fill.style.width = '75%'; fill.style.backgroundColor = '#3b82f6'; text.innerText = 'Good'; text.style.color = '#3b82f6'; }
+            else { fill.style.width = '100%'; fill.style.backgroundColor = '#22c55e'; text.innerText = 'Strong'; text.style.color = '#22c55e'; }
+
+            div.querySelector('.req-length').className = 'req-length' + (reqs.length ? ' valid' : '');
+            div.querySelector('.req-upper').className = 'req-upper' + (reqs.upper ? ' valid' : '');
+            div.querySelector('.req-number').className = 'req-number' + (reqs.number ? ' valid' : '');
+            div.querySelector('.req-special').className = 'req-special' + (reqs.special ? ' valid' : '');
+
+            return score === 4;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const regInput = document.getElementById('reg-password');
+            const resetInput = document.getElementById('reset-password');
+            if (regInput) regInput.addEventListener('input', () => checkPasswordStrength(regInput.value, 'reg-password-strength'));
+            if (resetInput) resetInput.addEventListener('input', () => checkPasswordStrength(resetInput.value, 'reset-password-strength'));
+        });
+</script>
 </body>
 </html>
