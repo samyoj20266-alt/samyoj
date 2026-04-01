@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Block search engines from indexing private user dashboards
+Disallow: /customer-dashboard.html
+Disallow: /vendor-dashboard.html
+Disallow: /my-bookings.html
+Disallow: /profile.html
+Disallow: /api/
+
+# Link to the Sitemap
+Sitemap: https://samyoj-backend.onrender.com/sitemap.xml
